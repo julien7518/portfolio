@@ -4,6 +4,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Cursor } from "@/components/cursor"
 import { cn } from "@/lib/utils"
+import { Metadata } from "next"
 
 const instrumentSerifHeading = Instrument_Serif({
   subsets: ["latin"],
@@ -17,6 +18,29 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+export const metadata: Metadata = {
+  title: {
+    default: "Julien Fernandes",
+    template: "%s | Julien Fernandes",
+  },
+  description: "Engineering student, developer and athlete.",
+  keywords: [
+    "julien",
+    "fernandes",
+    "developer",
+    "engineer",
+    "portfolio",
+    "paris",
+  ],
+  authors: [{ name: "Julien Fernandes" }],
+  openGraph: {
+    title: "Julien Fernandes",
+    description: "Engineering Student based in Paris, France.",
+    type: "website",
+    locale: "en_US",
+  },
+}
 
 export default function RootLayout({
   children,

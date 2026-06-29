@@ -32,15 +32,17 @@ export function Cursor() {
   }, [])
 
   const size = isOverClickable ? "35px" : "20px"
+  const rotation = isOverClickable ? "rotate(-90deg)" : "rotate(0deg)"
 
   return (
     <div
-      className="pointer-events-none fixed -translate-2/4 bg-background mix-blend-difference transition-[width,height] duration-200 ease-in-out dark:bg-foreground"
+      className="pointer-events-none fixed bg-background mix-blend-difference transition-[width,height,transform] duration-200 ease-in-out dark:bg-foreground"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
         width: size,
         height: size,
+        transform: `translate(-50%, -50%) ${rotation}`,
       }}
     />
   )
