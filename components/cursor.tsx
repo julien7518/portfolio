@@ -32,7 +32,7 @@ export function Cursor() {
   }, [])
 
   const size = isOverClickable ? "35px" : "20px"
-  const rotation = isOverClickable ? "rotate(-90deg)" : "rotate(0deg)"
+  const rotation = isOverClickable ? "rotate(90deg)" : "rotate(0deg)"
 
   return (
     <div

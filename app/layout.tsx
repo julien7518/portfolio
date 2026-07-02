@@ -1,10 +1,11 @@
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google"
 
 import "./globals.css"
+import { Metadata } from "next"
+import { Analytics } from "@vercel/analytics/next"
+import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Cursor } from "@/components/cursor"
-import { cn } from "@/lib/utils"
-import { Metadata } from "next"
 
 const instrumentSerifHeading = Instrument_Serif({
   subsets: ["latin"],
@@ -59,6 +60,7 @@ export default function RootLayout({
         instrumentSerifHeading.variable
       )}
     >
+      <Analytics />
       <body>
         <ThemeProvider>
           <Cursor />
