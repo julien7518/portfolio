@@ -117,7 +117,9 @@
 }
 
 @layer base {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     cursor: none !important;
   }
   * {

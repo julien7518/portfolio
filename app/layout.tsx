@@ -1,23 +1,19 @@
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google"
-
+import { Instrument_Serif } from "next/font/google"
+import { GeistMono } from "geist/font/mono"
+import { GeistPixelGrid } from "geist/font/pixel"
+import { GeistSans } from "geist/font/sans"
 import "./globals.css"
 import { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Cursor } from "@/components/cursor"
+import { Footer } from "@/components/footer"
 
 const instrumentSerifHeading = Instrument_Serif({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-heading",
-})
-
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
 })
 
 export const metadata: Metadata = {
@@ -54,17 +50,18 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased",
-        fontMono.variable,
-        "font-sans",
-        geist.variable,
+        GeistSans.variable,
+        GeistMono.variable,
+        GeistPixelGrid.className,
         instrumentSerifHeading.variable
       )}
     >
       <Analytics />
       <body>
+        <Cursor />
         <ThemeProvider>
-          <Cursor />
           {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

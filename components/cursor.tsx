@@ -3,10 +3,26 @@
 import { useEffect, useState } from "react"
 
 export function Cursor() {
+  const [isMobile, setIsMobile] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isOverClickable, setIsOverClickable] = useState(false)
 
   useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkIfMobile()
+    window.addEventListener("resize", checkIfMobile)
+
+    return () => {
+      window.removeEventListener("resize", checkIfMobile)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isMobile) return
+
     const isClickableElement = (element: Element | null) => {
       if (!element) return false
 
@@ -29,7 +45,9 @@ export function Cursor() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
     }
-  }, [])
+  }, [isMobile])
+
+  if (isMobile) return null
 
   const size = isOverClickable ? "35px" : "20px"
   const rotation = isOverClickable ? "rotate(90deg)" : "rotate(0deg)"
