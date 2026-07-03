@@ -1,14 +1,23 @@
-import { Instrument_Serif } from "next/font/google"
-import { GeistMono } from "geist/font/mono"
-import { GeistPixelGrid } from "geist/font/pixel"
-import { GeistSans } from "geist/font/sans"
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google"
 import "./globals.css"
 import { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Cursor } from "@/components/cursor"
-import { Footer } from "@/components/footer"
+import { Header } from "@/components/header"
+
+const geist = Geist({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-sans",
+})
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-mono",
+})
 
 const instrumentSerifHeading = Instrument_Serif({
   subsets: ["latin"],
@@ -21,7 +30,7 @@ export const metadata: Metadata = {
     default: "Julien Fernandes",
     template: "%s | Julien Fernandes",
   },
-  description: "Engineering student, developer and athlete.",
+  description: "Engineering Student based in Paris, France.",
   keywords: [
     "julien",
     "fernandes",
@@ -50,19 +59,19 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased",
-        GeistSans.variable,
-        GeistMono.variable,
-        GeistPixelGrid.className,
+        geist.variable,
+        geistMono.variable,
         instrumentSerifHeading.variable
       )}
     >
       <Analytics />
-      <body>
+      <body className="flex min-h-svh flex-col font-sans">
         <Cursor />
-        <ThemeProvider>
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <Header />
+        <main className="flex-1">
+          <ThemeProvider>{children}</ThemeProvider>
+        </main>
+        <Header />
       </body>
     </html>
   )
