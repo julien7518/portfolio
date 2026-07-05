@@ -7,7 +7,7 @@ export default function Page() {
     <div className="flex min-h-full items-center justify-center">
       <div className="flex flex-col items-center p-6">
         <div className="mt-30 w-full">
-          <div className="flex w-full justify-between font-mono text-sm">
+          <div className="flex w-full justify-between font-mono text-sm text-muted-foreground">
             <div>Paris, France</div>
             <ParisClock />
           </div>

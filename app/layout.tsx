@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Cursor } from "@/components/cursor"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -71,7 +72,7 @@ export default function RootLayout({
         <main className="flex-1">
           <ThemeProvider>{children}</ThemeProvider>
         </main>
-        <Header />
+        <Footer />
       </body>
     </html>
   )

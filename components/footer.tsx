@@ -1,12 +1,36 @@
+import { GitHub, Instagram, LinkedIn, LogoButton, X_Twitter } from "./logos"
+
 export function Footer() {
   return (
-    <footer className="relative w-full overflow-hidden sm:h-36 md:h-48 lg:h-56">
-      <div className="font-geist-pixel-grid">
-        &copy; {new Date().getFullYear()} Julien Fernandes
+    <footer className="flex w-full flex-col-reverse items-center justify-between p-6 md:flex-row">
+      <div className="font-mono">
+        Julien Fernandes &copy; {new Date().getFullYear()}
       </div>
-      <div className="-mt-6 flex translate-y-1/4 items-center justify-center overflow-hidden bg-linear-to-b from-foreground from-0% to-foreground/0 to-85% bg-clip-text text-center font-heading text-[6rem] leading-none text-transparent select-none sm:block sm:h-36 md:h-48 md:text-[14rem] lg:h-56 lg:text-[20rem]">
+      <div className="mb-4 space-x-2 md:mb-0">
+        <LogoButton
+          name="GitHub"
+          logo={GitHub()}
+          link="https://github.com/julien7518"
+        />
+        <LogoButton
+          name="LinkedIn"
+          logo={LinkedIn()}
+          link="https://www.linkedin.com/in/julien-fernandes-61a957370/"
+        />
+        <LogoButton
+          name="Instagram"
+          logo={Instagram()}
+          link="https://www.instagram.com/julien_75018/"
+        />
+        <LogoButton
+          name="X"
+          logo={X_Twitter()}
+          link="https://x.com/julien_7518"
+        />
+      </div>
+      {/*<div className="-mt-6 flex translate-y-1/4 items-center justify-center overflow-hidden bg-linear-to-b from-foreground from-0% to-foreground/0 to-85% bg-clip-text text-center font-heading text-[6rem] leading-none text-transparent select-none sm:block sm:h-36 md:h-48 md:text-[14rem] lg:h-56 lg:text-[20rem]">
         Contact me
-      </div>
+      </div>*/}
     </footer>
   )
 }
