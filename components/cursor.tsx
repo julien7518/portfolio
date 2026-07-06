@@ -49,7 +49,7 @@ export function Cursor() {
 
   if (isMobile) return null
 
-  const size = isOverClickable ? "35px" : "20px"
+  const size = isOverClickable ? "30px" : "20px"
   const rotation = isOverClickable ? "rotate(90deg)" : "rotate(0deg)"
 
   return (

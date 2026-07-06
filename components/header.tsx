@@ -17,8 +17,11 @@ export function Header() {
           <Link href="/me">Me</Link>
         </Button>
       </div>
-      <div>
-        <Button asChild variant="secondary">
+      <div className="space-x-2">
+        <Button asChild variant="tertiary" className="px-4">
+          <Link href="/resume">CV</Link>
+        </Button>
+        <Button asChild variant="default">
           <Link href="mailto:julien.f2004@icloud.com">Contact</Link>
         </Button>
       </div>
