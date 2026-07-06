@@ -1,4 +1,4 @@
-import { GitHub, Instagram, LinkedIn, LogoButton, X_Twitter } from "./logos"
+import { GitHub, Instagram, LinkedIn, SocialButton, X_Twitter } from "./logos"
 
 export function Footer() {
   return (
@@ -7,22 +7,22 @@ export function Footer() {
         Julien Fernandes &copy; {new Date().getFullYear()}
       </div>
       <div className="mb-4 space-x-2 md:mb-0">
-        <LogoButton
+        <SocialButton
           name="GitHub"
           logo={GitHub()}
           link="https://github.com/julien7518"
         />
-        <LogoButton
+        <SocialButton
           name="LinkedIn"
           logo={LinkedIn()}
           link="https://www.linkedin.com/in/julien-fernandes-61a957370/"
         />
-        <LogoButton
+        <SocialButton
           name="Instagram"
           logo={Instagram()}
           link="https://www.instagram.com/julien_75018/"
         />
-        <LogoButton
+        <SocialButton
           name="X"
           logo={X_Twitter()}
           link="https://x.com/julien_7518"

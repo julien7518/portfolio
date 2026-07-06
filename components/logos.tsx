@@ -63,7 +63,7 @@ export function X_Twitter() {
   )
 }
 
-export function LogoButton({
+export function SocialButton({
   logo,
   name,
   link,
@@ -79,7 +79,9 @@ export function LogoButton({
       size="icon-sm"
       aria-label={`${name} logo`}
     >
-      <Link href={link}>{logo}</Link>
+      <Link href={link} target="_blank">
+        {logo}
+      </Link>
     </Button>
   )
 }
