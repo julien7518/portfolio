@@ -3,8 +3,8 @@ import { Button } from "./ui/button"
 
 export function Header() {
   return (
-    <div className="flex justify-between p-6">
-      <div className="space-x-6">
+    <div className="flex justify-between p-4 md:p-6">
+      <div className="space-x-4 md:space-x-6">
         <Link href="/" className="font-heading">
           JF
         </Link>

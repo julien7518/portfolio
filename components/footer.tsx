@@ -3,7 +3,7 @@ import { GitHub, Instagram, LinkedIn, SocialButton, X_Twitter } from "./logos"
 export function Footer() {
   return (
     <footer className="flex w-full flex-col-reverse items-center justify-between p-6 md:flex-row">
-      <div className="font-mono">
+      <div className="font-mono text-xs">
         Julien Fernandes &copy; {new Date().getFullYear()}
       </div>
       <div className="mb-4 space-x-2 md:mb-0">
