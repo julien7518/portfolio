@@ -1,7 +1,9 @@
+import ProjectCard from "@/components/project-card"
+
 export default function Projects() {
   return (
     <div className="h-full w-full px-6">
-      <div>
+      <div className="mb-4">
         <div className="flex place-items-end justify-end space-x-2 align-bottom md:-mb-3">
           <div className="mb-4 hidden font-mono md:block">
             <p className="text-end">9</p>
@@ -14,7 +16,14 @@ export default function Projects() {
         <hr className="bg-muted" />
       </div>
       <div>
-        
+        <ProjectCard
+          name="My project"
+          description="This is the subtitle"
+          link="/projects"
+          content="Here is the longer description"
+          live="/live"
+          category={["UI/UX", "SaaS", "Portfolio", "Hardware"]}
+        />
       </div>
     </div>
   )

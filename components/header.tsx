@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Button } from "./ui/button"
+import LinkButton from "./link-button"
 
 export function Header() {
   return (
@@ -9,19 +10,15 @@ export function Header() {
           JF
         </Link>
 
-        <Button asChild variant="link" className="px-0">
-          <Link href="/projects">Projects</Link>
-        </Button>
+        <LinkButton label="Projects" link="/projects" />
 
-        <Button asChild variant="link" className="px-0">
-          <Link href="/me">Me</Link>
-        </Button>
+        <LinkButton label="Me" link="/me" />
       </div>
       <div className="space-x-2">
         <Button asChild variant="tertiary" className="px-4">
           <Link href="/resume">CV</Link>
         </Button>
-        <Button asChild variant="default">
+        <Button asChild>
           <Link href="mailto:julien.f2004@icloud.com">Contact</Link>
         </Button>
       </div>
