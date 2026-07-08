@@ -5,7 +5,11 @@ import { Title } from "@/components/ui/title"
 export default function Projects() {
   return (
     <div className="h-full w-full px-6">
-      <Title title="Projects" subtitle1="[9]" subtitle2="2024-2026" />
+      <Title
+        title="Projects"
+        subtitle1={`[${projects.length}]`}
+        subtitle2="2024-2026"
+      />
       <div className="space-y-10">
         {projects.map((project) => (
           <ProjectCard
