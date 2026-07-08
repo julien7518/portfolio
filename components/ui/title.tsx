@@ -5,6 +5,7 @@ interface TitleProps {
   subtitle1: string
   subtitle2: string
   reverse?: boolean
+  className?: string
 }
 
 export function Title({
@@ -12,12 +13,13 @@ export function Title({
   subtitle1,
   subtitle2,
   reverse = false,
+  className,
 }: TitleProps) {
   return (
-    <div className="mb-4">
+    <div className={cn("mb-6 bg-background pt-3", className)}>
       <div
         className={cn(
-          "flex place-items-end justify-end space-x-2 align-bottom md:-mb-3",
+          "flex place-items-end justify-end space-x-2 align-bottom",
           reverse ? "flex-row-reverse" : "flex-row"
         )}
       >
@@ -27,7 +29,7 @@ export function Title({
         </div>
         <h1 className="text-end font-heading text-5xl md:text-9xl">{title}</h1>
       </div>
-      <hr className="bg-muted" />
+      <hr className="bg-muted md:-mt-3" />
     </div>
   )
 }

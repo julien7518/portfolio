@@ -9,8 +9,9 @@ export default function Projects() {
         title="Projects"
         subtitle1={`[${projects.length}]`}
         subtitle2="2024-2026"
+        className="sticky top-0 z-10"
       />
-      <div className="space-y-10">
+      <div className="space-y-10 px-0.5">
         {projects.map((project) => (
           <ProjectCard
             key={project.name}
