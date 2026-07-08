@@ -7,9 +7,9 @@
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.147 0.004 49.3);
-  --card: oklch(1 0 0);
+  --card: oklch(0.986 0.002 67.8);
   --card-foreground: oklch(0.147 0.004 49.3);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.986 0.002 67.8);
   --popover-foreground: oklch(0.147 0.004 49.3);
   --primary: oklch(0.555 0.163 48.998);
   --primary-foreground: oklch(0.987 0.022 95.277);

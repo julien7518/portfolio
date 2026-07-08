@@ -11,16 +11,21 @@ import {
   CardContent,
   CardAction,
 } from "./ui/card"
-import LinkButton from "./link-button"
+import LinkButton from "./ui/link-button"
 import { Badge } from "./ui/badge"
+import { GitHub } from "./logos"
 
-interface ProjectCardProps {
+type category =
+  "UI/UX" | "SaaS" | "Portfolio" | "Python" | "Swift" | "React" | "AI"
+
+export interface ProjectCardProps {
   name: string
-  description?: string
-  content: string
-  link: string
+  subtitle?: string
+  description: string
+  link?: string
   live?: string
-  category?: string[]
+  github?: string
+  categories?: category[]
   imageSrc?: string
   imageAlt?: string
   reverse?: boolean
@@ -30,11 +35,12 @@ interface ProjectCardProps {
 
 export default function ProjectCard({
   name,
+  subtitle,
   description,
-  content,
   link,
   live,
-  category,
+  github,
+  categories,
   imageSrc,
   imageAlt,
   reverse = false,
@@ -55,15 +61,13 @@ export default function ProjectCard({
       <div className="w-full md:w-2/3">
         <CardHeader>
           <CardTitle>{name}</CardTitle>
-          {description ? (
-            <CardDescription>{description}</CardDescription>
-          ) : null}
+          {subtitle ? <CardDescription>{subtitle}</CardDescription> : null}
         </CardHeader>
 
         <CardContent className="space-y-4">
-          <p>{content}</p>
+          <p>{description}</p>
           <div className="space-y-2 space-x-2">
-            {category?.map((label, index) => (
+            {categories?.map((label, index) => (
               <Badge variant="secondary" key={index}>
                 {label}
               </Badge>
@@ -71,13 +75,38 @@ export default function ProjectCard({
           </div>
         </CardContent>
 
-        <CardFooter className="space-x-8">
-          <CardAction>
-            <LinkButton label="Learn more" link={link} icon={ArrowUpRight} />
-          </CardAction>
+        <CardFooter className="flex-wrap gap-x-6">
+          {link ? (
+            <CardAction>
+              <LinkButton
+                labelFull="Learn more"
+                labelShort="More"
+                link={link}
+              />
+            </CardAction>
+          ) : null}
           {live ? (
             <CardAction>
-              <LinkButton label="View live" link={live} icon={ArrowUpRight} />
+              <LinkButton
+                labelFull="View live"
+                labelShort="Live"
+                link={live}
+                target="_blank"
+                iconPosition="start"
+                icon={ArrowUpRight}
+              />
+            </CardAction>
+          ) : null}
+          {github ? (
+            <CardAction>
+              <LinkButton
+                labelFull="GitHub repository"
+                labelShort="GitHub"
+                link={github}
+                target="_blank"
+                icon={GitHub}
+                iconPosition="start"
+              />
             </CardAction>
           ) : null}
         </CardFooter>

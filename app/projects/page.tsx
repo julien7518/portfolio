@@ -1,31 +1,29 @@
 import ProjectCard from "@/components/project-card"
+import { projects } from "./project"
+import { Title } from "@/components/ui/title"
 
 export default function Projects() {
   return (
     <div className="h-full w-full px-6">
-      <div className="mb-4">
-        <div className="flex place-items-end justify-end space-x-2 align-bottom md:-mb-3">
-          <div className="mb-4.5 hidden font-mono text-xs md:block">
-            <p className="text-end">9</p>
-            <p className="text-end">software</p>
-          </div>
-          <h1 className={`text-end font-heading text-5xl md:text-9xl`}>
-            Projects
-          </h1>
-        </div>
-        <hr className="bg-muted" />
-      </div>
-      <div>
-        <ProjectCard
-          name="My project"
-          description="This is the subtitle"
-          link="/projects"
-          content="Here is the longer description"
-          live="/live"
-          category={["UI/UX", "SaaS", "Portfolio", "Hardware"]}
-          imageAlt="a"
-          imageSrc="/favicon.svg"
-        />
+      <Title title="Projects" subtitle1="[9]" subtitle2="2024-2026" />
+      <div className="space-y-10">
+        {projects.map((project) => (
+          <ProjectCard
+            key={project.name}
+            name={project.name}
+            subtitle={project.subtitle}
+            description={project.description}
+            link={project.link}
+            live={project.live}
+            github={project.github}
+            categories={project.categories}
+            imageSrc={project.imageSrc}
+            imageAlt={project.imageAlt}
+            reverse={project.reverse}
+            minHeight={project.minHeight}
+            imageProportion={project.imageProportion}
+          />
+        ))}
       </div>
     </div>
   )
