@@ -14,7 +14,23 @@ import {
 import LinkButton from "./ui/link-button"
 import { Badge } from "./ui/badge"
 import { GitHub } from "./logos"
-import { ProjectCardProps } from "@/app/projects/project"
+import { ProjectType } from "@/app/projects/project"
+
+export type ProjectCardProps = Pick<
+  ProjectType,
+  | "name"
+  | "subtitle"
+  | "description"
+  | "link"
+  | "live"
+  | "github"
+  | "categories"
+  | "imageSrc"
+  | "imageAlt"
+  | "reverse"
+  | "minHeight"
+  | "imageProportion"
+>
 
 export default function ProjectCard({
   name,

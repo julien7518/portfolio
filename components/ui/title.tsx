@@ -27,7 +27,7 @@ export function Title({
           <p className={reverse ? "text-start" : "text-end"}>{subtitle1}</p>
           <p className={reverse ? "text-start" : "text-end"}>{subtitle2}</p>
         </div>
-        <h1 className="text-end font-heading text-5xl md:text-9xl">{title}</h1>
+        <h1 className="text-end font-heading text-6xl md:text-9xl">{title}</h1>
       </div>
       <hr className="bg-muted md:-mt-3" />
     </div>

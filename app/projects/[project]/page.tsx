@@ -1,10 +1,7 @@
 import { notFound } from "next/navigation"
-import ProjectCard from "@/components/project-card"
 import { projects } from "../project"
-
-function slugify(name: string) {
-  return name.toLowerCase()
-}
+import { Title } from "@/components/ui/title"
+import { slugify } from "@/lib/utils"
 
 export function generateStaticParams() {
   return projects
@@ -22,5 +19,14 @@ export default async function ProjectPage({
 
   if (!project) notFound()
 
-  return <ProjectCard {...project} />
+  return (
+    <div className="h-full w-full px-6">
+      <Title
+        title={project.name}
+        subtitle1={project.date ?? ""}
+        subtitle2={`[${project.categories?.join(", ")}]`}
+        reverse
+      />
+    </div>
+  )
 }
