@@ -54,7 +54,7 @@ export function Cursor() {
 
   return (
     <div
-      className="pointer-events-none fixed bg-background mix-blend-difference transition-[width,height,transform] duration-200 ease-in-out dark:bg-foreground z-50"
+      className="pointer-events-none fixed z-50 bg-background mix-blend-difference transition-[width,height,transform] duration-200 ease-in-out dark:bg-foreground"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,

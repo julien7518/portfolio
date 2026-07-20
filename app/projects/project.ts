@@ -1,4 +1,20 @@
-import { ProjectCardProps } from "@/components/project-card"
+type category =
+  "UI/UX" | "SaaS" | "Portfolio" | "Python" | "Swift" | "React" | "AI"
+
+export interface ProjectCardProps {
+  name: string
+  subtitle?: string
+  description: string
+  link?: string
+  live?: string
+  github?: string
+  categories?: category[]
+  imageSrc?: string
+  imageAlt?: string
+  reverse?: boolean
+  minHeight?: number
+  imageProportion?: "1/2" | "1/3" | "1/4"
+}
 
 export const projects: ProjectCardProps[] = [
   {
