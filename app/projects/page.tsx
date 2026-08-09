@@ -11,7 +11,7 @@ export default function Projects() {
         subtitle2="2024-2026"
         className="sticky top-0 z-10"
       />
-      <div className="space-y-10 px-0.5">
+      <div className="grid gap-10 px-0.5 md:grid-cols-2">
         {projects.map((project) => (
           <ProjectCard
             key={project.name}

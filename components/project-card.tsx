@@ -1,6 +1,5 @@
 import { ArrowUpRight } from "lucide-react"
 import Image from "next/image"
-import { cn } from "@/lib/utils"
 
 import {
   Card,
@@ -42,28 +41,22 @@ export default function ProjectCard({
   categories,
   imageSrc,
   imageAlt,
-  reverse = false,
 }: ProjectCardProps) {
   return (
-    <Card
-      className={cn(
-        "flex min-h-0 flex-col-reverse overflow-hidden",
-        reverse ? "md:flex-row-reverse" : "md:flex-row"
-      )}
-    >
+    <Card className="h-full min-h-0">
       {imageSrc && imageAlt ? (
         <div className="relative w-1/3">
           <Image src={imageSrc} alt={imageAlt} fill className="object-cover" />
         </div>
       ) : null}
 
-      <div className="w-full md:w-2/3">
-        <CardHeader>
+      <div className="flex h-full w-full flex-col">
+        <CardHeader className="shrink-0">
           <CardTitle>{name}</CardTitle>
           {subtitle ? <CardDescription>{subtitle}</CardDescription> : null}
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="min-h-0 flex-1 space-y-4">
           <p>{description}</p>
           <div className="space-y-2 space-x-2">
             {categories?.map((label, index) => (
@@ -74,7 +67,7 @@ export default function ProjectCard({
           </div>
         </CardContent>
 
-        <CardFooter className="flex-wrap gap-x-6">
+        <CardFooter className="w-full shrink-0 flex-wrap gap-x-6">
           {link ? (
             <CardAction>
               <LinkButton

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useTheme } from "next-themes"
 import { Button } from "./ui/button"
 import LinkButton from "./ui/link-button"
+import { MdLightMode, MdDarkMode } from "react-icons/md"
 
 export function Header() {
   const { resolvedTheme, setTheme } = useTheme()
@@ -22,10 +23,12 @@ export function Header() {
       <div className="space-x-2">
         <Button
           variant="ghost"
-          className="hidden px-2 md:inline"
+          className="hidden p-2 md:inline"
+          size="icon"
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+          asChild
         >
-          {resolvedTheme === "dark" ? "light" : "dark"}
+          {resolvedTheme === "dark" ? <MdLightMode /> : <MdDarkMode />}
         </Button>
         <Button asChild variant="secondary" className="px-4">
           <Link href="/resume">CV</Link>
