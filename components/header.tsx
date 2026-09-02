@@ -26,6 +26,7 @@ export function Header() {
           className="hidden p-2 md:inline"
           size="icon"
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+          data-cursor-pointer
           asChild
         >
           {resolvedTheme === "dark" ? <MdLightMode /> : <MdDarkMode />}

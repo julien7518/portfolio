@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation"
-import { projects } from "../project"
+import { selectedProjects } from "../project"
 import { Title } from "@/components/ui/title"
 import { slugify } from "@/lib/utils"
 
 export function generateStaticParams() {
-  return projects
+  return selectedProjects
     .filter((project) => project.link)
     .map((project) => ({ project: slugify(project.name) }))
 }
@@ -15,7 +15,7 @@ export default async function ProjectPage({
   params: Promise<{ project: string }>
 }) {
   const { project: slug } = await params
-  const project = projects.find((p) => slugify(p.name) === slug)
+  const project = selectedProjects.find((p) => slugify(p.name) === slug)
 
   if (!project) notFound()
 

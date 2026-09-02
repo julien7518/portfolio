@@ -23,7 +23,7 @@ export function Title({
           reverse ? "flex-row-reverse" : "flex-row"
         )}
       >
-        <div className="mx-2.5 mb-4.5 hidden font-mono text-xs md:block">
+        <div className="mx-1 mb-2 font-mono text-xs md:mx-2.5 md:mb-4.5 md:block">
           <p className={reverse ? "text-start" : "text-end"}>{subtitle1}</p>
           <p className={reverse ? "text-start" : "text-end"}>{subtitle2}</p>
         </div>
