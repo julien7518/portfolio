@@ -28,6 +28,7 @@ export function IndexRow({
   const rowRef = useRef<HTMLDivElement>(null)
 
   const number = String(position).padStart(2, "0")
+  const hasFrames = project.frames.length > 0
 
   const navigate = (event: MouseEvent<HTMLDivElement>) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
@@ -53,7 +54,9 @@ export function IndexRow({
       id={`project-${project.slug}`}
       data-reveal-item
       data-cursor-pointer
-      onMouseEnter={() => show(project)}
+      onMouseEnter={() => {
+        if (hasFrames) show(project)
+      }}
       onMouseLeave={hide}
       onClick={navigate}
       className="group/row relative border-b border-border focus-within:outline-none"
@@ -78,6 +81,8 @@ export function IndexRow({
             <Link
               href={project.href}
               onFocus={() => {
+                if (!hasFrames) return
+
                 show(project)
                 rowRef.current?.scrollIntoView({
                   block: "nearest",

@@ -50,9 +50,16 @@ export function SmoothScroll() {
 
 export function scrollToY(target: number, immediate = false) {
   if (lenis) {
+    lenis.resize()
     lenis.scrollTo(target, { immediate })
     return
   }
 
   window.scrollTo({ top: target, behavior: immediate ? "auto" : "smooth" })
+}
+
+export function scrollToElement(element: HTMLElement, offset = 120) {
+  const top = element.getBoundingClientRect().top + window.scrollY - offset
+
+  scrollToY(Math.max(0, top), true)
 }

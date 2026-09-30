@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 
-import { AmbientCanvas } from "@/components/ambient-canvas"
 import { AnimatedTitle } from "@/components/ui/animated-title"
 import {
   ProjectIndex,
@@ -53,8 +52,6 @@ export default function Projects() {
   return (
     <ProjectPreviewProvider>
       <div className="relative">
-        <AmbientCanvas />
-
         <div className="relative z-10 w-full px-6">
           <AnimatedTitle
             title="Projects"

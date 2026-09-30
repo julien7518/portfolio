@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { ArrowLeft, ArrowUpRight } from "lucide-react"
 
-import { usePreview, type PreviewTarget } from "./preview"
+import type { PreviewTarget } from "./preview"
 
 export function NextProject({
   project,
@@ -14,8 +14,6 @@ export function NextProject({
   href: string
   variant: "next" | "previous"
 }) {
-  const { show, hide } = usePreview()
-
   const isNext = variant === "next"
   const Icon = isNext ? ArrowUpRight : ArrowLeft
   const direction = isNext
@@ -29,10 +27,6 @@ export function NextProject({
   return (
     <Link
       href={href}
-      onMouseEnter={() => show(project)}
-      onMouseLeave={hide}
-      onFocus={() => show(project)}
-      onBlur={hide}
       data-cursor-pointer
       className="group/next relative block py-10 md:py-14"
     >

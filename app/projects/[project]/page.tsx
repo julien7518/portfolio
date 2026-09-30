@@ -9,10 +9,7 @@ import { ScrollProgress } from "@/components/ui/scroll-progress"
 import { Reveal } from "@/components/ui/reveal"
 import { Gallery } from "@/components/projects/gallery"
 import { NextProject } from "@/components/projects/next-project"
-import {
-  ProjectPreviewProvider,
-  type PreviewTarget,
-} from "@/components/projects/preview"
+import type { PreviewTarget } from "@/components/projects/preview"
 import { GitHub } from "@/components/logos"
 import { allProjects, type ProjectType } from "../project"
 import { slugify } from "@/lib/utils"
@@ -86,7 +83,7 @@ export default async function ProjectPage({
     )
 
   return (
-    <ProjectPreviewProvider>
+    <>
       <ScrollProgress />
 
       <div className="w-full px-6">
@@ -257,11 +254,9 @@ export default async function ProjectPage({
             />
             All projects
           </span>
-          <span className="tabular-nums">
-            {String(total).padStart(2, "0")}
-          </span>
+          <span className="tabular-nums">{String(total).padStart(2, "0")}</span>
         </Link>
       </div>
-    </ProjectPreviewProvider>
+    </>
   )
 }

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react"
 
 import SubTitle from "@/components/ui/subtitle"
 import { Reveal } from "@/components/ui/reveal"
-import { scrollToY } from "@/components/smooth-scroll"
+import { scrollToElement } from "@/components/smooth-scroll"
 import { IndexRow, type IndexRowProject } from "./index-row"
 
 export type ProjectGroup = {
@@ -39,17 +39,29 @@ export function ProjectIndex({ groups }: { groups: ProjectGroup[] }) {
     const target = document.getElementById(hash)
     if (!target) return
 
-    scrollToY(Math.max(0, target.offsetTop - 120), true)
-
     const clear = () => {
       target.classList.remove("animate-row-return")
       target.removeEventListener("animationend", clear)
     }
 
-    target.classList.add("animate-row-return")
     target.addEventListener("animationend", clear)
 
-    return clear
+    // SmoothScroll resets to the top on pathname change and recalculates
+    // its own limits on the next frame. Both run after this effect, as a
+    // parent, so restoring the hash has to wait for them or it is undone.
+    let inner = 0
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => {
+        scrollToElement(target, 120)
+        target.classList.add("animate-row-return")
+      })
+    })
+
+    return () => {
+      cancelAnimationFrame(outer)
+      cancelAnimationFrame(inner)
+      clear()
+    }
   }, [])
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
