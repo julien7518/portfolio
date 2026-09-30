@@ -28,8 +28,8 @@ const WINDOW_WIDTH = 380
 const WINDOW_RATIO = 5 / 3
 const OFFSET_X = 56
 const OFFSET_Y = 46
-const LEAD_IN = 450
-const ADVANCE_EVERY = 1100
+const LEAD_IN = 700
+const ADVANCE_EVERY = 1700
 
 type PreviewContextValue = {
   show: (target: PreviewTarget) => void

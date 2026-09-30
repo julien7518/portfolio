@@ -245,30 +245,22 @@ export default async function ProjectPage({
           </div>
         </nav>
 
-        <Reveal className="mt-8 md:mt-12">
-          <Link
-            href={`/projects#project-${slugify(project.name)}`}
-            data-cursor-pointer
-            className="group/all flex items-end justify-between gap-6 border border-border px-5 py-8 transition-colors duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:bg-foreground hover:text-background md:px-8 md:py-12"
-          >
-            <span className="flex items-center gap-3">
-              <ArrowLeft
-                aria-hidden
-                className="size-4 shrink-0 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-hover/all:-translate-x-1 md:size-5"
-              />
-              <span className="font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase transition-colors duration-500 group-hover/all:text-background/70">
-                Back to
-              </span>
-              <span className="font-heading text-4xl leading-none tracking-tight md:text-6xl">
-                All projects
-              </span>
-            </span>
-
-            <span className="shrink-0 font-mono text-[0.625rem] tracking-widest uppercase tabular-nums">
-              {String(total).padStart(2, "0")}
-            </span>
-          </Link>
-        </Reveal>
+        <Link
+          href={`/projects#project-${slugify(project.name)}`}
+          data-cursor-pointer
+          className="group/all mt-10 flex items-center justify-between gap-4 border-t border-border pt-6 font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase transition-colors duration-300 hover:text-foreground"
+        >
+          <span className="flex items-center gap-2">
+            <ArrowLeft
+              aria-hidden
+              className="size-3 transition-transform duration-300 group-hover/all:-translate-x-1"
+            />
+            All projects
+          </span>
+          <span className="tabular-nums">
+            {String(total).padStart(2, "0")}
+          </span>
+        </Link>
       </div>
     </ProjectPreviewProvider>
   )

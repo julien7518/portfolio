@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { Button } from "./ui/button"
 import LinkButton from "./ui/link-button"
@@ -8,6 +9,12 @@ import { MdLightMode, MdDarkMode } from "react-icons/md"
 
 export function Header() {
   const { resolvedTheme, setTheme } = useTheme()
+  const pathname = usePathname()
+
+  const detail = pathname?.match(/^\/projects\/([^/]+)\/?$/)
+  const projectsHref = detail
+    ? `/projects#project-${detail[1]}`
+    : "/projects"
 
   return (
     <div className="flex justify-between p-4 md:p-6">
@@ -16,7 +23,7 @@ export function Header() {
           JF
         </Link>
 
-        <LinkButton labelFull="Projects" link="/projects" />
+        <LinkButton labelFull="Projects" link={projectsHref} />
 
         <LinkButton labelFull="Me" link="/me" />
       </div>
