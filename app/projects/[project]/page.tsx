@@ -156,7 +156,7 @@ export default async function ProjectPage({
               ) : null}
 
               {project.live || project.github ? (
-                <div className="space-y-3 border-t border-border pt-6">
+                <div className="space-y-3 space-x-3 border-t border-border pt-6">
                   {project.live ? (
                     <LinkButton
                       labelFull="Visit live"
