@@ -3,10 +3,26 @@
 import { useEffect, useState } from "react"
 
 export function Cursor() {
+  const [isMobile, setIsMobile] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isOverClickable, setIsOverClickable] = useState(false)
 
   useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkIfMobile()
+    window.addEventListener("resize", checkIfMobile)
+
+    return () => {
+      window.removeEventListener("resize", checkIfMobile)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isMobile) return
+
     const isClickableElement = (element: Element | null) => {
       if (!element) return false
 
@@ -29,18 +45,22 @@ export function Cursor() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
     }
-  }, [])
+  }, [isMobile])
 
-  const size = isOverClickable ? "35px" : "20px"
+  if (isMobile) return null
+
+  const size = isOverClickable ? "30px" : "20px"
+  const rotation = isOverClickable ? "rotate(90deg)" : "rotate(0deg)"
 
   return (
     <div
-      className="pointer-events-none fixed -translate-2/4 bg-background mix-blend-difference transition-[width,height] duration-200 ease-in-out dark:bg-foreground"
+      className="pointer-events-none fixed z-50 bg-background mix-blend-difference transition-[width,height,transform] duration-200 ease-in-out dark:bg-foreground"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
         width: size,
         height: size,
+        transform: `translate(-50%, -50%) ${rotation}`,
       }}
     />
   )
