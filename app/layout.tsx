@@ -4,6 +4,7 @@ import { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
+import { SmoothScroll } from "@/components/smooth-scroll"
 import { Cursor } from "@/components/cursor"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -68,6 +69,7 @@ export default function RootLayout({
       <Analytics />
       <body className="flex min-h-svh flex-col font-sans">
         <ThemeProvider>
+          <SmoothScroll />
           <Cursor />
           <Header />
           <main className="flex-1">{children}</main>

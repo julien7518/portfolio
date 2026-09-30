@@ -186,3 +186,29 @@
 .animate-scroll-reveal {
   animation: scroll-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+@keyframes preview-scan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(500%);
+  }
+}
+
+.animate-preview-scan {
+  animation: preview-scan 1.15s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes preview-settle {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.07);
+  }
+}
+
+.animate-preview-settle {
+  animation: preview-settle 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
