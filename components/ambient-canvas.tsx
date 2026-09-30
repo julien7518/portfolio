@@ -6,10 +6,11 @@ import { cn } from "@/lib/utils"
 
 const SENTINEL = "#010203"
 const FALLBACK = "#8a8a8a"
-const POINTER_RADIUS = 150
-const POINTER_FORCE = 0.045
-const LINK_DISTANCE = 168
-const LINK_ALPHA = 0.16
+const REACH = 460
+const LINK_DISTANCE = 132
+const LINK_ALPHA = 0.05
+const NODE_ALPHA = 0.14
+const FLOOR = 0.12
 
 type Node = {
   x: number
@@ -27,7 +28,6 @@ export function AmbientCanvas({ className }: { className?: string }) {
     if (!canvas) return
 
     const context = canvas.getContext("2d", { alpha: true })
-
     if (!context) return
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -53,15 +53,16 @@ export function AmbientCanvas({ className }: { className?: string }) {
     }
 
     const seed = () => {
-      const area = width * height
-      const count = Math.round(Math.min(72, Math.max(26, area / 26000)))
+      const count = Math.round(
+        Math.min(24, Math.max(9, (width * height) / 62000))
+      )
 
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.16,
-        vy: (Math.random() - 0.5) * 0.16,
-        r: Math.random() * 1.4 + 0.5,
+        vx: (Math.random() - 0.5) * 0.09,
+        vy: (Math.random() - 0.5) * 0.09,
+        r: Math.random() * 0.9 + 0.35,
       }))
     }
 
@@ -82,25 +83,12 @@ export function AmbientCanvas({ className }: { className?: string }) {
       frame = requestAnimationFrame(draw)
 
       context.clearRect(0, 0, width, height)
-      context.globalAlpha = 1
       context.lineWidth = 1
       context.strokeStyle = stroke
 
       for (const node of nodes) {
-        if (pointer.active) {
-          const dx = node.x - pointer.x
-          const dy = node.y - pointer.y
-          const distance = Math.hypot(dx, dy)
-
-          if (distance < POINTER_RADIUS && distance > 0.01) {
-            const pull = (1 - distance / POINTER_RADIUS) * POINTER_FORCE
-            node.vx += (dx / distance) * pull
-            node.vy += (dy / distance) * pull
-          }
-        }
-
-        node.vx *= 0.985
-        node.vy *= 0.985
+        node.vx *= 0.99
+        node.vy *= 0.99
         node.x += node.vx
         node.y += node.vy
 
@@ -111,26 +99,46 @@ export function AmbientCanvas({ className }: { className?: string }) {
       }
 
       context.beginPath()
+
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i]
+
         for (let j = i + 1; j < nodes.length; j++) {
           const b = nodes[j]
-          const dx = a.x - b.x
-          const dy = a.y - b.y
-          const distance = Math.hypot(dx, dy)
-
+          const distance = Math.hypot(a.x - b.x, a.y - b.y)
           if (distance > LINK_DISTANCE) continue
 
-          context.globalAlpha = LINK_ALPHA * (1 - distance / LINK_DISTANCE)
+          const proximity = pointer.active
+            ? Math.max(
+                0,
+                1 - Math.hypot(a.x - pointer.x, a.y - pointer.y) / REACH
+              )
+            : 0
+
+          if (proximity <= 0.004) continue
+
+          context.globalAlpha =
+            LINK_ALPHA *
+            (FLOOR + (1 - FLOOR) * proximity) *
+            (1 - distance / LINK_DISTANCE)
+
           context.moveTo(a.x, a.y)
           context.lineTo(b.x, b.y)
         }
       }
+
       context.stroke()
 
-      context.globalAlpha = LINK_ALPHA * 1.8
       context.beginPath()
       for (const node of nodes) {
+        const proximity = pointer.active
+          ? Math.max(
+              0,
+              1 - Math.hypot(node.x - pointer.x, node.y - pointer.y) / REACH
+            )
+          : 0
+
+        context.globalAlpha = NODE_ALPHA * (FLOOR + (1 - FLOOR) * proximity)
         context.moveTo(node.x + node.r, node.y)
         context.arc(node.x, node.y, node.r, 0, Math.PI * 2)
       }
@@ -151,6 +159,15 @@ export function AmbientCanvas({ className }: { className?: string }) {
       running = document.visibilityState === "visible"
     }
 
+    const onReducedChange = () => {
+      if (reduced.matches) {
+        cancelAnimationFrame(frame)
+        context.clearRect(0, 0, width, height)
+      } else if (running) {
+        draw()
+      }
+    }
+
     resolveStroke()
     resize()
     if (!reduced.matches) draw()
@@ -160,13 +177,6 @@ export function AmbientCanvas({ className }: { className?: string }) {
       attributes: true,
       attributeFilter: ["class", "style"],
     })
-
-    const onReducedChange = () => {
-      if (reduced.matches) {
-        cancelAnimationFrame(frame)
-        context.clearRect(0, 0, width, height)
-      }
-    }
 
     window.addEventListener("resize", resize)
     window.addEventListener("pointermove", onPointerMove, { passive: true })
@@ -190,7 +200,7 @@ export function AmbientCanvas({ className }: { className?: string }) {
       ref={canvasRef}
       aria-hidden
       className={cn(
-        "pointer-events-none fixed inset-0 z-0 opacity-70",
+        "pointer-events-none fixed inset-0 z-0 opacity-45",
         className
       )}
     />

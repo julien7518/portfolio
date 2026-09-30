@@ -47,3 +47,12 @@ export function SmoothScroll() {
 
   return null
 }
+
+export function scrollToY(target: number, immediate = false) {
+  if (lenis) {
+    lenis.scrollTo(target, { immediate })
+    return
+  }
+
+  window.scrollTo({ top: target, behavior: immediate ? "auto" : "smooth" })
+}

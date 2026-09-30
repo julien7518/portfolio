@@ -8,33 +8,33 @@ import { usePreview, type PreviewTarget } from "./preview"
 export function NextProject({
   project,
   href,
-  external,
   variant,
 }: {
   project: PreviewTarget
   href: string
-  external: boolean
   variant: "next" | "previous"
 }) {
   const { show, hide } = usePreview()
 
   const isNext = variant === "next"
   const Icon = isNext ? ArrowUpRight : ArrowLeft
+  const direction = isNext
+    ? "group-hover/next:translate-x-3 group-focus-visible/next:translate-x-3"
+    : "group-hover/next:-translate-x-3 group-focus-visible/next:-translate-x-3"
 
-  const externalProps = external
-    ? { target: "_blank" as const, rel: "noreferrer noopener" }
-    : {}
+  const reveal = isNext
+    ? "group-hover/next:translate-x-0 group-hover/next:opacity-100 group-focus-visible/next:opacity-100 md:-translate-x-2"
+    : "group-hover/next:translate-x-0 group-hover/next:opacity-100 group-focus-visible/next:opacity-100 md:translate-x-2"
 
   return (
     <Link
       href={href}
-      {...externalProps}
       onMouseEnter={() => show(project)}
       onMouseLeave={hide}
       onFocus={() => show(project)}
       onBlur={hide}
       data-cursor-pointer
-      className="group/next relative block border-t border-border py-10 md:py-16"
+      className="group/next relative block py-10 md:py-14"
     >
       <span
         aria-hidden
@@ -52,18 +52,14 @@ export function NextProject({
 
       <div className="mt-4 flex items-end justify-between gap-6">
         <h2
-          className={
-            isNext
-              ? "font-heading text-5xl leading-none transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover/next:translate-x-3 group-focus-visible/next:translate-x-3 md:text-7xl xl:text-8xl"
-              : "font-heading text-5xl leading-none transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover/next:-translate-x-3 group-focus-visible/next:-translate-x-3 md:text-7xl xl:text-8xl"
-          }
+          className={`font-heading text-5xl leading-none transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] md:text-7xl xl:text-8xl ${direction}`}
         >
           {project.name}
         </h2>
 
         <Icon
           aria-hidden
-          className="size-8 shrink-0 text-primary opacity-0 transition-all duration-500 group-hover/next:translate-x-0 group-hover/next:opacity-100 group-focus-visible/next:opacity-100 md:size-12 md:-translate-x-2"
+          className={`size-8 shrink-0 text-primary opacity-0 transition-all duration-500 md:size-12 ${reveal}`}
         />
       </div>
 

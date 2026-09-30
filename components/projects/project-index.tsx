@@ -1,9 +1,10 @@
 "use client"
 
-import { useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 
 import SubTitle from "@/components/ui/subtitle"
 import { Reveal } from "@/components/ui/reveal"
+import { scrollToY } from "@/components/smooth-scroll"
 import { IndexRow, type IndexRowProject } from "./index-row"
 
 export type ProjectGroup = {
@@ -30,6 +31,17 @@ export function ProjectIndex({ groups }: { groups: ProjectGroup[] }) {
       })),
     [groups, flat]
   )
+
+  useEffect(() => {
+    const hash = window.location.hash.slice(1)
+    if (!hash) return
+
+    const target = document.getElementById(hash)
+    if (!target) return
+
+    scrollToY(Math.max(0, target.offsetTop - 120), true)
+    target.classList.add("animate-row-return")
+  }, [])
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return

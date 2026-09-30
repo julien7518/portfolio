@@ -13,7 +13,7 @@ export type IndexRowProject = PreviewTarget & {
   date?: string
   github?: string
   href: string
-  external: boolean
+  categories?: string[]
 }
 
 export function IndexRow({
@@ -28,10 +28,6 @@ export function IndexRow({
   const rowRef = useRef<HTMLDivElement>(null)
 
   const number = String(position).padStart(2, "0")
-
-  const externalProps = project.external
-    ? { target: "_blank" as const, rel: "noreferrer noopener" }
-    : {}
 
   const navigate = (event: MouseEvent<HTMLDivElement>) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
@@ -48,30 +44,27 @@ export function IndexRow({
 
     if (hasSelection) return
 
-    if (project.external) {
-      window.open(project.href, "_blank", "noopener,noreferrer")
-    } else {
-      router.push(project.href)
-    }
+    router.push(project.href)
   }
 
   return (
     <div
       ref={rowRef}
+      id={`project-${project.slug}`}
       data-reveal-item
       data-cursor-pointer
       onMouseEnter={() => show(project)}
       onMouseLeave={hide}
       onClick={navigate}
-      className="group/row relative border-b border-border transition-colors duration-500 focus-within:bg-primary/[0.035] hover:bg-primary/[0.035]"
+      className="group/row relative border-b border-border transition-colors duration-500 ease-[cubic-bezier(.22,1,.36,1)] focus-within:bg-foreground focus-within:text-background hover:bg-foreground hover:text-background"
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-px origin-left scale-x-0 bg-primary transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/row:scale-x-100 group-hover/row:scale-x-100"
+        className="absolute inset-y-0 left-0 w-[3px] origin-center scale-y-0 bg-primary transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/row:scale-y-100 group-hover/row:scale-y-100"
       />
 
-      <div className="relative z-30 flex flex-col gap-3 px-0.5 py-6 md:flex-row md:items-baseline md:gap-8 md:px-2 md:py-9">
-        <span className="pointer-events-none w-8 shrink-0 font-mono text-xs text-muted-foreground tabular-nums transition-colors duration-500 group-hover/row:text-primary">
+      <div className="relative flex flex-col gap-3 py-6 pr-2 pl-4 md:flex-row md:items-baseline md:gap-8 md:py-9 md:pl-6">
+        <span className="pointer-events-none w-8 shrink-0 font-mono text-xs tabular-nums">
           {number}
         </span>
 
@@ -79,7 +72,6 @@ export function IndexRow({
           <h3 className="font-heading text-4xl leading-none tracking-tight transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/row:translate-x-2 group-hover/row:translate-x-2 md:text-6xl xl:text-7xl">
             <Link
               href={project.href}
-              {...externalProps}
               onFocus={() => {
                 show(project)
                 rowRef.current?.scrollIntoView({
@@ -88,14 +80,14 @@ export function IndexRow({
                 })
               }}
               onBlur={hide}
-              className="rounded-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-inset"
+              className="rounded-none focus-visible:outline-none"
             >
               {project.name}
             </Link>
           </h3>
 
           {project.subtitle ? (
-            <p className="mt-2 max-w-prose text-sm text-muted-foreground md:text-base">
+            <p className="mt-2 max-w-prose text-sm text-muted-foreground transition-colors duration-500 group-hover/row:text-background/70 md:text-base">
               {project.subtitle}
             </p>
           ) : null}
@@ -103,29 +95,28 @@ export function IndexRow({
 
         <div className="flex items-baseline justify-between gap-6 md:shrink-0 md:flex-col md:items-end md:gap-1.5 md:text-right">
           {project.categories?.length ? (
-            <span className="font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase">
+            <span className="font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase transition-colors duration-500 group-hover/row:text-background/60">
               {project.categories.join(" · ")}
             </span>
           ) : null}
-          <span className="font-mono text-xs text-muted-foreground md:text-[0.625rem]">
+          <span className="font-mono text-xs tabular-nums md:text-[0.625rem]">
             {project.date}
           </span>
-          <ArrowUpRight
-            aria-hidden
-            className="size-4 shrink-0 self-end text-primary opacity-0 transition-all duration-500 group-focus-within/row:opacity-100 group-hover/row:translate-x-0 group-hover/row:opacity-100 md:size-5 md:-translate-x-1"
-          />
+          <span className="pointer-events-none flex size-6 shrink-0 items-center justify-center self-end bg-primary text-primary-foreground transition-all duration-500 group-focus-within/row:scale-100 group-hover/row:translate-x-0 group-hover/row:scale-100 md:size-7 md:-translate-x-2 md:scale-75">
+            <ArrowUpRight aria-hidden className="size-4 md:size-5" />
+          </span>
         </div>
       </div>
 
-      <div className="relative z-40 flex items-center justify-end gap-4 px-0.5 pb-5 md:hidden">
-        {project.imageSrc ? (
-          <div className="pointer-events-none relative aspect-[5/3] w-40 overflow-hidden bg-muted">
+      <div className="relative flex items-center justify-end gap-4 pb-5 pl-4 md:hidden">
+        {project.frames[0] ? (
+          <div className="pointer-events-none relative aspect-[5/3] w-36 overflow-hidden bg-muted">
             <Image
-              src={project.imageSrc}
+              src={project.frames[0]}
               alt={project.imageAlt ?? ""}
               fill
-              sizes="160px"
-              className="object-cover"
+              sizes="144px"
+              className="scale-[1.08] object-cover"
             />
           </div>
         ) : null}
@@ -136,7 +127,7 @@ export function IndexRow({
             rel="noreferrer noopener"
             data-cursor-pointer
             aria-label={`${project.name} GitHub repository`}
-            className="pointer-events-auto ml-auto inline-flex items-center gap-2 font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase"
+            className="pointer-events-auto ml-auto inline-flex items-center gap-2 font-mono text-[0.625rem] tracking-widest uppercase"
           >
             <span className="size-3.5 [&>svg]:size-3.5">{GitHub()}</span>
             Source

@@ -200,15 +200,18 @@
   animation: preview-scan 1.15s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
-@keyframes preview-settle {
+@keyframes row-return {
   0% {
-    transform: scale(1);
+    background-color: transparent;
+  }
+  18% {
+    background-color: color-mix(in oklch, var(--primary) 20%, transparent);
   }
   100% {
-    transform: scale(1.07);
+    background-color: transparent;
   }
 }
 
-.animate-preview-settle {
-  animation: preview-settle 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.animate-row-return {
+  animation: row-return 2.4s cubic-bezier(0.22, 1, 0.36, 1) 1 both;
 }

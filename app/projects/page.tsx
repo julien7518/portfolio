@@ -22,18 +22,19 @@ export const metadata: Metadata = {
 }
 
 function toRow(project: ProjectType) {
+  const slug = slugify(project.name)
+
   return {
-    slug: slugify(project.name),
+    slug,
     name: project.name,
     subtitle: project.subtitle,
     date: project.date,
     github: project.github,
     live: project.live,
-    imageSrc: project.imageSrc,
     imageAlt: project.imageAlt,
     categories: project.categories,
-    href: project.link ?? project.live ?? "#",
-    external: !project.link,
+    frames: project.gallery ?? (project.imageSrc ? [project.imageSrc] : []),
+    href: `/projects/${slug}`,
   }
 }
 
@@ -44,8 +45,8 @@ export default function Projects() {
     { label: "Other little things", projects: littleProjects.map(toRow) },
   ]
 
-  const total = groups.reduce(
-    (count, group) => count + group.projects.length,
+  const count = groups.reduce(
+    (total, group) => total + group.projects.length,
     0
   )
 
@@ -57,15 +58,10 @@ export default function Projects() {
         <div className="relative z-10 w-full px-6">
           <AnimatedTitle
             title="Projects"
-            subtitle1={`[${total}]`}
+            subtitle1={`[${count}]`}
             subtitle2="2024 — 2026"
             className="sticky top-0 z-10"
           />
-
-          <p className="mt-4 hidden max-w-prose font-mono text-[0.625rem] leading-relaxed tracking-widest text-muted-foreground uppercase lg:block">
-            Hover a row to open the project live in a floating window · use{" "}
-            <span className="text-primary">↑ ↓</span> to move between them
-          </p>
 
           <ProjectIndex groups={groups} />
         </div>

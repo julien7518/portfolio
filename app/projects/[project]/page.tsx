@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowUpRight } from "lucide-react"
+import { ArrowLeft, ArrowUpRight } from "lucide-react"
 
 import LinkButton from "@/components/ui/link-button"
 import { Title } from "@/components/ui/title"
@@ -13,10 +14,10 @@ import {
   type PreviewTarget,
 } from "@/components/projects/preview"
 import { GitHub } from "@/components/logos"
-import { selectedProjects, type ProjectType } from "../project"
+import { allProjects, type ProjectType } from "../project"
 import { slugify } from "@/lib/utils"
 
-const detailable = selectedProjects.filter((project) => project.link)
+const total = allProjects.length
 
 function toPreviewTarget(project: ProjectType): PreviewTarget {
   return {
@@ -25,14 +26,13 @@ function toPreviewTarget(project: ProjectType): PreviewTarget {
     subtitle: project.subtitle,
     date: project.date,
     live: project.live,
-    imageSrc: project.imageSrc,
+    frames: project.gallery ?? (project.imageSrc ? [project.imageSrc] : []),
     imageAlt: project.imageAlt,
-    categories: project.categories,
   }
 }
 
 export function generateStaticParams() {
-  return detailable.map((project) => ({ project: slugify(project.name) }))
+  return allProjects.map((project) => ({ project: slugify(project.name) }))
 }
 
 export async function generateMetadata({
@@ -41,13 +41,13 @@ export async function generateMetadata({
   params: Promise<{ project: string }>
 }): Promise<Metadata> {
   const { project: slug } = await params
-  const project = detailable.find((item) => slugify(item.name) === slug)
+  const project = allProjects.find((item) => slugify(item.name) === slug)
 
   if (!project) return {}
 
   const description =
     project.description ??
-    `${project.name} — ${project.subtitle ?? ""}. A project by Julien Fernandes.`
+    `${project.name} — ${project.subtitle ?? "a project"} by Julien Fernandes.`
 
   return {
     title: project.name,
@@ -67,23 +67,21 @@ export default async function ProjectPage({
   params: Promise<{ project: string }>
 }) {
   const { project: slug } = await params
-  const index = detailable.findIndex((item) => slugify(item.name) === slug)
+  const index = allProjects.findIndex((item) => slugify(item.name) === slug)
 
   if (index === -1) notFound()
 
-  const project = detailable[index]
-  const total = detailable.length
+  const project = allProjects[index]
   const position = String(index + 1).padStart(2, "0")
 
-  const nextProject = detailable[(index + 1) % total]
-  const previousProject = detailable[(index - 1 + total) % total]
+  const nextProject = allProjects[(index + 1) % total]
+  const previousProject = allProjects[(index - 1 + total) % total]
 
   const paragraphs = project.long_description ?? []
-  const gallery =
-    project.gallery ?? (project.imageSrc ? [project.imageSrc] : [])
+  const frames = project.gallery ?? (project.imageSrc ? [project.imageSrc] : [])
   const alts =
     project.galleryAlts ??
-    gallery.map((src) =>
+    frames.map((src) =>
       src === project.imageSrc ? project.imageAlt : undefined
     )
 
@@ -92,6 +90,18 @@ export default async function ProjectPage({
       <ScrollProgress />
 
       <div className="w-full px-6">
+        <Link
+          href={`/projects#project-${slugify(project.name)}`}
+          data-cursor-pointer
+          className="group/back mt-4 inline-flex items-center gap-2 font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase transition-colors duration-300 hover:text-foreground"
+        >
+          <ArrowLeft
+            aria-hidden
+            className="size-3 transition-transform duration-300 group-hover/back:-translate-x-1"
+          />
+          All projects
+        </Link>
+
         <Title
           title={project.name}
           subtitle1={project.date}
@@ -194,8 +204,6 @@ export default async function ProjectPage({
               </Reveal>
             ) : null}
 
-            <Gallery images={gallery} alts={alts} name={project.name} />
-
             {project.outcome?.length ? (
               <Reveal className="mt-16 border-t border-border pt-8 md:mt-24">
                 <div className="grid gap-8 sm:grid-cols-3">
@@ -215,18 +223,18 @@ export default async function ProjectPage({
           </article>
         </div>
 
+        <Gallery images={frames} alts={alts} name={project.name} />
+
         <nav className="mt-16 border-t border-border md:mt-24">
           <NextProject
             project={toPreviewTarget(previousProject)}
             href={`/projects/${slugify(previousProject.name)}`}
-            external={false}
             variant="previous"
           />
           <div className="border-t border-border">
             <NextProject
               project={toPreviewTarget(nextProject)}
               href={`/projects/${slugify(nextProject.name)}`}
-              external={false}
               variant="next"
             />
           </div>
