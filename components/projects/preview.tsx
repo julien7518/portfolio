@@ -28,10 +28,8 @@ const WINDOW_WIDTH = 380
 const WINDOW_RATIO = 5 / 3
 const OFFSET_X = 56
 const OFFSET_Y = 46
-const DEAD_BAND = 0.25
-const IDLE_AFTER = 1500
+const LEAD_IN = 450
 const ADVANCE_EVERY = 1100
-const STEP_MS = 90
 
 type PreviewContextValue = {
   show: (target: PreviewTarget) => void
@@ -134,60 +132,17 @@ export function ProjectPreviewProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!mounted || !capabilities.motion || count < 2) return
 
-    const cursor = { x: 0 }
     let stepTimer: ReturnType<typeof setInterval> | null = null
-    let idleTimer: ReturnType<typeof setTimeout> | null = null
 
-    const stopIdle = () => {
-      if (idleTimer) clearTimeout(idleTimer)
-      idleTimer = null
-    }
-
-    const stopStep = () => {
-      if (stepTimer) {
-        clearInterval(stepTimer)
-        stepTimer = null
-      }
-    }
-
-    const startIdle = () => {
-      stopIdle()
-      idleTimer = setTimeout(() => {
-        stepTimer = setInterval(() => {
-          setFrame((current) => (current + 1) % count)
-        }, ADVANCE_EVERY)
-      }, IDLE_AFTER)
-    }
-
-    const onMove = (event: PointerEvent) => {
-      cursor.x = event.clientX
-      stopIdle()
-      stopStep()
-      startIdle()
-    }
-
-    const scrub = setInterval(() => {
-      const progress = cursor.x / Math.max(1, window.innerWidth)
-      const slot = 1 / count
-
-      setFrame((current) => {
-        const forward = (current + 1) * slot - slot * DEAD_BAND
-        const backward = current * slot + slot * DEAD_BAND
-
-        if (progress > forward && current < count - 1) return current + 1
-        if (progress < backward && current > 0) return current - 1
-        return current
-      })
-    }, STEP_MS)
-
-    window.addEventListener("pointermove", onMove, { passive: true })
-    startIdle()
+    const leadTimer = setTimeout(() => {
+      stepTimer = setInterval(() => {
+        setFrame((current) => (current + 1) % count)
+      }, ADVANCE_EVERY)
+    }, LEAD_IN)
 
     return () => {
-      clearInterval(scrub)
-      stopIdle()
-      stopStep()
-      window.removeEventListener("pointermove", onMove)
+      clearTimeout(leadTimer)
+      if (stepTimer) clearInterval(stepTimer)
     }
   }, [mounted, capabilities.motion, count])
 
@@ -205,14 +160,18 @@ export function ProjectPreviewProvider({ children }: { children: ReactNode }) {
       >
         {target && count > 0 ? (
           <>
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 scale-[1.08]">
               <Image
                 key={target.frames[index]}
                 src={target.frames[index]}
                 alt=""
                 fill
                 sizes="380px"
-                className="scale-[1.08] object-cover"
+                className={
+                  count > 1
+                    ? "animate-preview-shutter object-cover"
+                    : "animate-preview-drift object-cover"
+                }
               />
             </div>
 
@@ -231,8 +190,8 @@ export function ProjectPreviewProvider({ children }: { children: ReactNode }) {
 
             {count > 1 ? (
               <span
-                key={index}
-                className="animate-preview-scan absolute inset-x-0 top-0 h-px origin-left bg-primary"
+                key={`progress-${index}`}
+                className="animate-preview-progress absolute inset-x-0 bottom-0 h-px origin-left bg-primary"
               />
             ) : null}
           </>

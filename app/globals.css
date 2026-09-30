@@ -187,17 +187,53 @@
   animation: scroll-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes preview-scan {
+@keyframes preview-progress {
   0% {
-    transform: translateX(-100%);
+    transform: scaleX(0);
   }
   100% {
-    transform: translateX(500%);
+    transform: scaleX(1);
   }
 }
 
-.animate-preview-scan {
-  animation: preview-scan 1.15s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+.animate-preview-progress {
+  animation: preview-progress 1100ms linear both;
+}
+
+@keyframes preview-shutter {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  38% {
+    opacity: 0;
+    transform: scale(1.07);
+  }
+  39% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-preview-shutter {
+  animation: preview-shutter 720ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes preview-drift {
+  0% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-preview-drift {
+  animation: preview-drift 11s cubic-bezier(0.33, 0, 0.67, 1) infinite;
 }
 
 @keyframes row-return {

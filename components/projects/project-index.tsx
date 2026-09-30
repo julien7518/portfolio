@@ -40,7 +40,16 @@ export function ProjectIndex({ groups }: { groups: ProjectGroup[] }) {
     if (!target) return
 
     scrollToY(Math.max(0, target.offsetTop - 120), true)
+
+    const clear = () => {
+      target.classList.remove("animate-row-return")
+      target.removeEventListener("animationend", clear)
+    }
+
     target.classList.add("animate-row-return")
+    target.addEventListener("animationend", clear)
+
+    return clear
   }, [])
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {

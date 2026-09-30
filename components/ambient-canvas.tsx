@@ -6,11 +6,11 @@ import { cn } from "@/lib/utils"
 
 const SENTINEL = "#010203"
 const FALLBACK = "#8a8a8a"
-const REACH = 460
-const LINK_DISTANCE = 132
-const LINK_ALPHA = 0.05
-const NODE_ALPHA = 0.14
-const FLOOR = 0.12
+const REACH = 520
+const LINK_DISTANCE = 210
+const LINK_ALPHA = 0.14
+const NODE_ALPHA = 0.18
+const FLOOR = 0.4
 
 type Node = {
   x: number
@@ -54,7 +54,7 @@ export function AmbientCanvas({ className }: { className?: string }) {
 
     const seed = () => {
       const count = Math.round(
-        Math.min(24, Math.max(9, (width * height) / 62000))
+        Math.min(34, Math.max(12, (width * height) / 42000))
       )
 
       nodes = Array.from({ length: count }, () => ({
@@ -114,8 +114,6 @@ export function AmbientCanvas({ className }: { className?: string }) {
                 1 - Math.hypot(a.x - pointer.x, a.y - pointer.y) / REACH
               )
             : 0
-
-          if (proximity <= 0.004) continue
 
           context.globalAlpha =
             LINK_ALPHA *
@@ -200,7 +198,7 @@ export function AmbientCanvas({ className }: { className?: string }) {
       ref={canvasRef}
       aria-hidden
       className={cn(
-        "pointer-events-none fixed inset-0 z-0 opacity-45",
+        "pointer-events-none fixed inset-0 z-0 opacity-55",
         className
       )}
     />

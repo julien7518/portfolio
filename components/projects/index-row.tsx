@@ -56,20 +56,25 @@ export function IndexRow({
       onMouseEnter={() => show(project)}
       onMouseLeave={hide}
       onClick={navigate}
-      className="group/row relative border-b border-border transition-colors duration-500 ease-[cubic-bezier(.22,1,.36,1)] focus-within:bg-foreground focus-within:text-background hover:bg-foreground hover:text-background"
+      className="group/row relative border-b border-border focus-within:outline-none"
     >
       <span
         aria-hidden
-        className="absolute inset-y-0 left-0 w-[3px] origin-center scale-y-0 bg-primary transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/row:scale-y-100 group-hover/row:scale-y-100"
+        className="absolute inset-0 origin-left scale-x-0 bg-foreground transition-transform duration-[520ms] ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/row:scale-x-100 group-hover/row:scale-x-100"
       />
 
-      <div className="relative flex flex-col gap-3 py-6 pr-2 pl-4 md:flex-row md:items-baseline md:gap-8 md:py-9 md:pl-6">
+      <span
+        aria-hidden
+        className="absolute inset-y-0 left-0 z-20 w-[3px] origin-center scale-y-0 bg-primary transition-transform duration-[520ms] ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/row:scale-y-100 group-hover/row:scale-y-100"
+      />
+
+      <div className="relative z-10 flex flex-col gap-3 py-6 pr-2 pl-4 transition-colors duration-200 group-focus-within/row:text-background group-hover/row:text-background md:flex-row md:items-baseline md:gap-8 md:py-9 md:pl-6">
         <span className="pointer-events-none w-8 shrink-0 font-mono text-xs tabular-nums">
           {number}
         </span>
 
         <div className="min-w-0 flex-1">
-          <h3 className="font-heading text-4xl leading-none tracking-tight transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/row:translate-x-2 group-hover/row:translate-x-2 md:text-6xl xl:text-7xl">
+          <h3 className="font-heading text-4xl leading-none tracking-tight transition-transform duration-[620ms] ease-[cubic-bezier(.22,1,.36,1)] group-focus-within/row:translate-x-2 group-hover/row:translate-x-2 md:text-6xl xl:text-7xl">
             <Link
               href={project.href}
               onFocus={() => {
@@ -87,15 +92,15 @@ export function IndexRow({
           </h3>
 
           {project.subtitle ? (
-            <p className="mt-2 max-w-prose text-sm text-muted-foreground transition-colors duration-500 group-hover/row:text-background/70 md:text-base">
+            <p className="mt-2 max-w-prose text-sm text-muted-foreground transition-colors duration-200 group-focus-within/row:text-background/70 group-hover/row:text-background/70 md:text-base">
               {project.subtitle}
             </p>
           ) : null}
         </div>
 
-        <div className="flex items-baseline justify-between gap-6 md:shrink-0 md:flex-col md:items-end md:gap-1.5 md:text-right">
+        <div className="flex items-baseline justify-between gap-6 transition-colors delay-[240ms] duration-200 group-focus-within/row:text-background group-hover/row:text-background md:shrink-0 md:flex-col md:items-end md:gap-1.5 md:text-right">
           {project.categories?.length ? (
-            <span className="font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase transition-colors duration-500 group-hover/row:text-background/60">
+            <span className="font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase transition-colors duration-200 group-focus-within/row:text-background/60 group-hover/row:text-background/60">
               {project.categories.join(" · ")}
             </span>
           ) : null}
@@ -108,7 +113,7 @@ export function IndexRow({
         </div>
       </div>
 
-      <div className="relative flex items-center justify-end gap-4 pb-5 pl-4 md:hidden">
+      <div className="relative z-10 flex items-center justify-end gap-4 pb-5 pl-4 md:hidden">
         {project.frames[0] ? (
           <div className="pointer-events-none relative aspect-[5/3] w-36 overflow-hidden bg-muted">
             <Image
