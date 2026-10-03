@@ -12,9 +12,7 @@ export function Header() {
   const pathname = usePathname()
 
   const detail = pathname?.match(/^\/projects\/([^/]+)\/?$/)
-  const projectsHref = detail
-    ? `/projects#project-${detail[1]}`
-    : "/projects"
+  const projectsHref = detail ? `/projects#project-${detail[1]}` : "/projects"
 
   return (
     <div className="flex justify-between p-4 md:p-6">

@@ -3,7 +3,7 @@
 import { useRef, type ReactNode } from "react"
 import { useGSAP } from "@gsap/react"
 
-import { gsap, ScrollTrigger } from "@/lib/gsap"
+import { gsap } from "@/lib/gsap"
 import { cn } from "@/lib/utils"
 
 type RevealProps = {
@@ -52,5 +52,3 @@ export function Reveal({
     </div>
   )
 }
-
-export { ScrollTrigger }

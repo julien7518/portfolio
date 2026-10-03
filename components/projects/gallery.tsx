@@ -45,39 +45,37 @@ export function Gallery({
     return () => track.removeEventListener("scroll", onScroll)
   }, [count])
 
-  const goTo = useCallback(
-    (index: number) => {
-      const track = trackRef.current
-      if (!track) return
+  const goTo = useCallback((index: number) => {
+    const track = trackRef.current
+    if (!track) return
 
-      const item = track.children[index] as HTMLElement | undefined
-      if (!item) return
+    const item = track.children[index] as HTMLElement | undefined
+    if (!item) return
 
-      const style = getComputedStyle(track)
-      const padding = parseFloat(style.paddingLeft) || 0
-      const max = Math.max(0, track.scrollWidth - track.clientWidth)
-      const left = Math.min(
-        Math.max(
-          0,
-          item.offsetLeft - padding + (track.clientWidth - item.clientWidth) / 2
-        ),
-        max
-      )
+    const max = Math.max(0, track.scrollWidth - track.clientWidth)
+    const left = Math.min(
+      Math.max(0, item.offsetLeft - (track.clientWidth - item.clientWidth) / 2),
+      max
+    )
 
-      track.scrollTo({ left, behavior: "smooth" })
+    track.scrollTo({ left, behavior: "smooth" })
+  }, [])
+
+  const move = useCallback(
+    (step: number) => {
+      const next = Math.min(Math.max(active + step, 0), count - 1)
+
+      setActive(next)
+      goTo(next)
     },
-    []
+    [active, count, goTo]
   )
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return
     event.preventDefault()
 
-    const step = event.key === "ArrowRight" ? 1 : -1
-    const next = Math.min(Math.max(active + step, 0), count - 1)
-
-    setActive(next)
-    goTo(next)
+    move(event.key === "ArrowRight" ? 1 : -1)
   }
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -150,7 +148,7 @@ export function Gallery({
         onPointerCancel={endDrag}
         className={cn(
           "relative flex snap-x snap-proximity gap-4 overflow-x-auto py-6 select-none",
-          "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          "scrollbar-none [&::-webkit-scrollbar]:hidden",
           "md:gap-8 md:py-8",
           single && "justify-center"
         )}
@@ -159,16 +157,16 @@ export function Gallery({
           <figure
             key={src}
             className={cn(
-              "w-[82%] shrink-0 snap-center sm:w-[68%] md:w-[560px] lg:w-[640px]",
-              single && "w-full max-w-[640px]"
+              "w-[82%] shrink-0 snap-center sm:w-[68%] md:w-140 lg:w-160",
+              single && "w-full max-w-160"
             )}
           >
             <div
               className={cn(
-                "relative aspect-[5/3] overflow-hidden bg-muted transition-[outline-offset] duration-500",
+                "relative aspect-5/3 overflow-hidden bg-muted transition-[outline-offset] duration-500",
                 index === active &&
                   !single &&
-                  "outline outline-1 outline-offset-4 outline-primary"
+                  "outline outline-offset-4 outline-primary"
               )}
             >
               <Image
@@ -204,7 +202,9 @@ export function Gallery({
                 aria-current={index === active}
                 className={cn(
                   "h-px w-8 transition-colors duration-300 md:w-12",
-                  index === active ? "bg-primary" : "bg-border hover:bg-foreground/40"
+                  index === active
+                    ? "bg-primary"
+                    : "bg-border hover:bg-foreground/40"
                 )}
               />
             ))}
@@ -214,7 +214,7 @@ export function Gallery({
             <button
               type="button"
               data-cursor-pointer
-              onClick={() => goTo(active - 1)}
+              onClick={() => move(-1)}
               disabled={active === 0}
               aria-label="Previous frame"
               className="flex size-9 items-center justify-center border border-border transition-colors duration-300 hover:bg-foreground hover:text-background disabled:pointer-events-none disabled:opacity-30"
@@ -224,7 +224,7 @@ export function Gallery({
             <button
               type="button"
               data-cursor-pointer
-              onClick={() => goTo(active + 1)}
+              onClick={() => move(1)}
               disabled={active === count - 1}
               aria-label="Next frame"
               className="flex size-9 items-center justify-center border border-border transition-colors duration-300 hover:bg-foreground hover:text-background disabled:pointer-events-none disabled:opacity-30"
