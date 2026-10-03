@@ -1,3 +1,6 @@
+import { slugify } from "@/lib/utils"
+import type { IndexRowProject } from "@/components/projects/index-row"
+
 type category =
   | "UI/UX"
   | "SaaS"
@@ -27,6 +30,26 @@ export interface ProjectType {
   imageAlt?: string
   gallery?: string[]
   galleryAlts?: string[]
+  /** Surfaced on the homepage. Kept to a handful, so it stays a choice. */
+  featured?: boolean
+}
+
+/** Single source of truth for the shape every project row renders from. */
+export function toIndexRow(project: ProjectType): IndexRowProject {
+  const slug = slugify(project.name)
+
+  return {
+    slug,
+    name: project.name,
+    subtitle: project.subtitle,
+    date: project.date,
+    github: project.github,
+    live: project.live,
+    imageAlt: project.imageAlt,
+    categories: project.categories,
+    frames: project.gallery ?? (project.imageSrc ? [project.imageSrc] : []),
+    href: `/projects/${slug}`,
+  }
 }
 
 export const selectedProjects: ProjectType[] = [
@@ -53,6 +76,7 @@ export const selectedProjects: ProjectType[] = [
     live: "https://quinvo-app.vercel.app",
     github: "https://github.com/julien7518/quinvo",
     categories: ["SaaS", "UI/UX", "React", "Next.js"],
+    featured: true,
     imageSrc: "/quinvo/dashboard.png",
     imageAlt: "Quinvo dashboard with the invoice list and filters",
     gallery: [
@@ -95,6 +119,7 @@ export const selectedProjects: ProjectType[] = [
     github: "https://github.com/julien7518/kaumite",
     categories: ["Swift"],
     imageAlt: "Terminal interface of kaumite",
+    // no frames to preview, so it stays on the projects page only
   },
   {
     name: "ShaderLab",
@@ -112,6 +137,7 @@ export const selectedProjects: ProjectType[] = [
     github: "https://github.com/julien7518/shaderlab",
     live: "https://webgpu-shaderlab.vercel.app",
     categories: ["3D", "WebGPU"],
+    featured: true,
     imageSrc: "/shaderlab/shaderlab.png",
     imageAlt: "ShaderLab editor with the live shader preview",
     gallery: ["/shaderlab/shaderlab.png"],
@@ -139,6 +165,7 @@ export const selectedProjects: ProjectType[] = [
     live: "https://paperlm.vercel.app",
     github: "https://github.com/julien7518/paperlm",
     categories: ["AI", "React", "Next.js"],
+    featured: true,
     imageSrc: "/paperlm/paperlm.png",
     imageAlt: "PaperLM research assistant interface",
     gallery: ["/paperlm/paperlm.png"],

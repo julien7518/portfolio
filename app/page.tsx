@@ -1,21 +1,28 @@
-"use client"
+import type { Metadata } from "next"
 
-import { ParisClock } from "@/components/paris-clock"
+import { Hero } from "@/components/home/hero"
+import { Manifesto } from "@/components/home/manifesto"
+import { SelectedWork } from "@/components/home/selected-work"
+import { Contact } from "@/components/home/contact"
+import { ProjectPreviewProvider } from "@/components/projects/preview"
+import { allProjects, selectedProjects, toIndexRow } from "./projects/project"
+
+export const metadata: Metadata = {
+  description:
+    "Julien Fernandes — creative technologist in Paris, France. Web interfaces, native apps, embedded firmware and trained models.",
+}
 
 export default function Page() {
+  const featured = selectedProjects
+    .filter((project) => project.featured)
+    .map(toIndexRow)
+
   return (
-    <div className="flex min-h-full items-center justify-center">
-      <div className="flex flex-col items-center p-6">
-        <div className="mt-30 w-full">
-          <div className="flex w-full justify-between font-mono text-sm text-muted-foreground">
-            <div>Paris, France</div>
-            <ParisClock />
-          </div>
-          <h1 className="font-heading text-8xl md:text-9xl">
-            Julien Fernandes
-          </h1>
-        </div>
-      </div>
-    </div>
+    <ProjectPreviewProvider>
+      <Hero />
+      <Manifesto />
+      <SelectedWork projects={featured} total={allProjects.length} />
+      <Contact />
+    </ProjectPreviewProvider>
   )
 }
