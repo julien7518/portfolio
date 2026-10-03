@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
+import { contact, identity } from "@/resources"
 import { Button } from "./ui/button"
 import LinkButton from "./ui/link-button"
 import { MdLightMode, MdDarkMode } from "react-icons/md"
@@ -18,7 +19,7 @@ export function Header() {
     <div className="flex justify-between p-4 md:p-6">
       <div className="space-x-4 md:space-x-6">
         <Link href="/" className="font-heading">
-          JF
+          {identity.initials}
         </Link>
 
         <LinkButton labelFull="Projects" link={projectsHref} />
@@ -40,7 +41,7 @@ export function Header() {
           <Link href="/resume">CV</Link>
         </Button>
         <Button asChild>
-          <Link href="mailto:julien.f2004@icloud.com">Contact</Link>
+          <Link href={contact.mailto()}>Contact</Link>
         </Button>
       </div>
     </div>

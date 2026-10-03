@@ -8,6 +8,7 @@ import { SmoothScroll } from "@/components/smooth-scroll"
 import { Cursor } from "@/components/cursor"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { identity, seo } from "@/resources"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -28,28 +29,19 @@ const instrumentSerifHeading = Instrument_Serif({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-  ),
+  metadataBase: new URL(seo.url),
   title: {
-    default: "Julien Fernandes",
-    template: "%s | Julien Fernandes",
+    default: identity.name,
+    template: `%s | ${identity.name}`,
   },
-  description: "Engineering Student based in Paris, France.",
-  keywords: [
-    "julien",
-    "fernandes",
-    "developer",
-    "engineer",
-    "portfolio",
-    "paris",
-  ],
-  authors: [{ name: "Julien Fernandes" }],
+  description: identity.tagline,
+  keywords: [...seo.keywords],
+  authors: [{ name: identity.name }],
   openGraph: {
-    title: "Julien Fernandes",
-    description: "Engineering Student based in Paris, France.",
+    title: identity.name,
+    description: identity.tagline,
     type: "website",
-    locale: "en_US",
+    locale: seo.locale,
   },
 }
 

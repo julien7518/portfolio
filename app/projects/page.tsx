@@ -10,9 +10,8 @@ import {
   littleProjects,
   portfolioProjects,
   selectedProjects,
-  type ProjectType,
+  toIndexRow,
 } from "./project"
-import { slugify } from "@/lib/utils"
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -20,28 +19,11 @@ export const metadata: Metadata = {
     "Selected work, client portfolios and side projects — invoicing, WebGPU, on-device AI and hardware.",
 }
 
-function toRow(project: ProjectType) {
-  const slug = slugify(project.name)
-
-  return {
-    slug,
-    name: project.name,
-    subtitle: project.subtitle,
-    date: project.date,
-    github: project.github,
-    live: project.live,
-    imageAlt: project.imageAlt,
-    categories: project.categories,
-    frames: project.gallery ?? (project.imageSrc ? [project.imageSrc] : []),
-    href: `/projects/${slug}`,
-  }
-}
-
 export default function Projects() {
   const groups: ProjectGroup[] = [
-    { label: "Selected work", projects: selectedProjects.map(toRow) },
-    { label: "Portfolios", projects: portfolioProjects.map(toRow) },
-    { label: "Other little things", projects: littleProjects.map(toRow) },
+    { label: "Selected work", projects: selectedProjects.map(toIndexRow) },
+    { label: "Portfolios", projects: portfolioProjects.map(toIndexRow) },
+    { label: "Other little things", projects: littleProjects.map(toIndexRow) },
   ]
 
   const count = groups.reduce(
