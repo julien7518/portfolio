@@ -135,7 +135,7 @@
 
 ::selection {
   color: var(--primary);
-  background-color: var(--background);
+  background-color: transparent;
 }
 
 @keyframes title-slide-left {
