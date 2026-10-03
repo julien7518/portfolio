@@ -48,7 +48,7 @@ export function SmoothScroll() {
   return null
 }
 
-export function scrollToY(target: number, immediate = false) {
+function scrollToY(target: number, immediate = false) {
   if (lenis) {
     lenis.resize()
     lenis.scrollTo(target, { immediate })

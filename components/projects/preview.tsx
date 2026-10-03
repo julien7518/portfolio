@@ -177,7 +177,7 @@ export function ProjectPreviewProvider({ children }: { children: ReactNode }) {
 
             <div className="pointer-events-none absolute inset-0 bg-background/10" />
 
-            <div className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-3 bg-gradient-to-b from-background/75 to-transparent px-2.5 py-2">
+            <div className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-3 bg-linear-to-b from-background/75 to-transparent px-2.5 py-2">
               <span className="truncate font-mono text-[0.5625rem] tracking-widest uppercase">
                 {target.name}
               </span>

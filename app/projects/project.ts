@@ -37,7 +37,14 @@ export const selectedProjects: ProjectType[] = [
       "An invoicing dashboard for freelancers: clients, invoice statuses, and the revenue you still have to declare.",
     date: "Feb 2026",
     role: "Solo build — product design & fullstack",
-    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Supabase"],
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Supabase",
+    ],
     long_description: [
       "Quinvo is an invoicing web app for freelancers and small studios, built to give a quick read on where money stands without opening an accounting tool. Invoices are created in a standard format, carry a status (paid, pending, overdue), and calculate their own totals and taxes. Clients live in their own table, so recurring work is a matter of picking a name rather than retyping an address on every invoice.",
       "The dashboard is the part I care most about: pending invoices, revenue generated and revenue still to declare, with monthly and quarterly charts underneath. Revenue to declare in particular is a distinctly French administrative concern, and it is the number a freelancer opens the app to check. The stack is Next.js, React and TypeScript with Tailwind and shadcn/ui on the front, Supabase for both the database and email-based authentication, deployed on Vercel.",
@@ -73,7 +80,8 @@ export const selectedProjects: ProjectType[] = [
   },
   {
     name: "kaumite",
-    subtitle: "Generate Git commit messages locally with Apple Foundation Models",
+    subtitle:
+      "Generate Git commit messages locally with Apple Foundation Models",
     description:
       "A terminal tool that writes commit messages with an on-device model, so no code leaves the machine.",
     date: "Aug 2026",
