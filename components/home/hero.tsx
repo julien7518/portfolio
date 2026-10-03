@@ -1,12 +1,11 @@
 "use client"
 
 import { useRef } from "react"
-import Link from "next/link"
 import { useGSAP } from "@gsap/react"
-import { ArrowUpRight } from "lucide-react"
 
 import { ParisClock } from "@/components/paris-clock"
 import { gsap } from "@/lib/gsap"
+import { identity, location } from "@/resources"
 import { HeroGrid } from "./hero-grid"
 
 export function Hero() {
@@ -41,13 +40,16 @@ export function Hero() {
   return (
     <section
       ref={rootRef}
-      className="relative flex min-h-svh flex-col overflow-hidden px-6 pt-10 pb-8 md:px-6 md:pt-16 md:pb-10"
+      // min-h-full, not min-h-svh: the header is already stacked above this
+      // section, so claiming a whole viewport on top of it pushes the hero's own
+      // bottom bar past the fold. Filling what main() leaves keeps it on screen.
+      className="relative flex min-h-full flex-col overflow-hidden px-6 pt-10 pb-8 md:px-6 md:pt-16 md:pb-10"
     >
       <HeroGrid />
 
       <div className="relative z-10 flex items-baseline justify-between gap-6 border-b border-border pb-4 font-mono text-xs text-muted-foreground">
         <div data-hero-line className="tracking-widest uppercase">
-          Paris, France
+          {location.label}
         </div>
         <div data-hero-line className="tabular-nums">
           <ParisClock />
@@ -78,7 +80,7 @@ export function Hero() {
             data-hero-line
             className="font-mono text-[0.6875rem] tracking-widest uppercase"
           >
-            Creative technologist
+            {identity.role}
           </p>
           <p
             data-hero-line
@@ -88,19 +90,6 @@ export function Hero() {
             experiences that feel clear, tactile and alive.
           </p>
         </div>
-
-        <Link
-          data-hero-line
-          href="/projects"
-          data-cursor-pointer
-          className="group inline-flex items-center gap-3 self-start border-b border-foreground pb-1 font-mono text-xs tracking-widest uppercase transition-opacity duration-300 hover:opacity-60 md:self-end"
-        >
-          Selected work
-          <ArrowUpRight
-            aria-hidden
-            className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-          />
-        </Link>
       </div>
     </section>
   )
