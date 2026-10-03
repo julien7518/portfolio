@@ -5,11 +5,11 @@ import { Manifesto } from "@/components/home/manifesto"
 import { SelectedWork } from "@/components/home/selected-work"
 import { Contact } from "@/components/home/contact"
 import { ProjectPreviewProvider } from "@/components/projects/preview"
+import { seo } from "@/resources"
 import { allProjects, selectedProjects, toIndexRow } from "./projects/project"
 
 export const metadata: Metadata = {
-  description:
-    "Julien Fernandes — creative technologist in Paris, France. Web interfaces, native apps, embedded firmware and trained models.",
+  description: seo.description,
 }
 
 export default function Page() {

@@ -13,6 +13,7 @@ import type { PreviewTarget } from "@/components/projects/preview"
 import { GitHub } from "@/components/logos"
 import { allProjects, type ProjectType } from "../project"
 import { slugify } from "@/lib/utils"
+import { identity } from "@/resources"
 
 const total = allProjects.length
 
@@ -44,13 +45,13 @@ export async function generateMetadata({
 
   const description =
     project.description ??
-    `${project.name} — ${project.subtitle ?? "a project"} by Julien Fernandes.`
+    `${project.name} — ${project.subtitle ?? "a project"} by ${identity.name}.`
 
   return {
     title: project.name,
     description,
     openGraph: {
-      title: `${project.name} — Julien Fernandes`,
+      title: `${project.name} — ${identity.name}`,
       description,
       type: "article",
       images: project.imageSrc ? [{ url: project.imageSrc }] : undefined,
