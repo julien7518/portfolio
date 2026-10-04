@@ -148,12 +148,16 @@ const ACT = {
  * Where the closing beat begins, as a fraction of the scroll — and the only
  * number that decides how long the ending lasts.
  *
- * Everything above it is squeezed toward the top of the page to make room, and
- * the difference is spent on the one beat worth spending it on: the last word
- * coming apart. Tuning that from sixteen positions by hand every time is how
- * timings drift out of step with each other, so it is done once here instead.
+ * It trades against the scene's height in the markup. Everything above it is
+ * squeezed by `pack` to make room, so raising one without the other takes the
+ * difference out of the beginning instead. The two are set together so that
+ * the assembly keeps exactly the scroll distance it had and the ending gets
+ * twice as much: 300svh of travel, the last 27% of it the closing beat.
+ *
+ * Tuning that from sixteen positions by hand every time is how timings drift
+ * out of step with each other, so it is done once here instead.
  */
-const CLOSE = 0.845
+const CLOSE = 0.7316
 
 export function Manifesto() {
   const rootRef = useRef<HTMLElement>(null)
@@ -759,7 +763,7 @@ export function Manifesto() {
           is not wanted, which is what reduced motion gets. */}
       <div
         data-scene
-        className="relative h-[360svh] motion-reduce:h-auto motion-reduce:pt-24 md:motion-reduce:pt-32"
+        className="relative h-[400svh] motion-reduce:h-auto motion-reduce:pt-24 md:motion-reduce:pt-32"
       >
         <div
           data-stage

@@ -283,7 +283,7 @@ function Signal() {
       {/* A halo around the hub, built from two soft discs rather than a
           gradient so it costs nothing to composite. */}
       <circle cx="58" cy="46" r="15" className="fill-primary/[0.07]" />
-      <circle cx="58" cy="46" r="9" className="fill-primary/1" />
+      <circle cx="58" cy="46" r="9" className="fill-primary/10" />
 
       <g className="fill-foreground/30">
         {NODES.filter((_, index) => index !== 4).map(([x, y]) => (
