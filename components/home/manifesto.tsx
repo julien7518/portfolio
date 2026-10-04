@@ -389,6 +389,9 @@ export function Manifesto() {
                 scale: 1,
                 duration: shut - land,
                 ease: "power2.out",
+                // Same reason as the sweep: drawn with its line, not apart
+                // from it.
+                force3D: false,
                 immediateRender: false,
               },
               land + (shut - land) * 0.3
@@ -467,6 +470,16 @@ export function Manifesto() {
         // contracts inside its own box instead — a transform never reflows,
         // so it cannot reach its neighbours — and the sweep is carried by the
         // stagger alone.
+        //
+        // force3D: false keeps a line in one rasterised layer. GSAP promotes
+        // every element it animates onto its own 3D-transformed layer for the
+        // length of the tween, and a scene scrubbed against scroll is one very
+        // long tween — so each word was being drawn apart from the line it
+        // belongs to. Chrome absorbs that; WebKit snaps a layer's bounds to
+        // whole pixels and an italic's overhang does not survive it, which is
+        // what printed words over one another on the way out. Nothing on this
+        // scene moves in depth, so there is nothing to lose by staying 2D —
+        // and it spares the compositor fourteen layer promotions.
         const cascade = collect<HTMLElement>(
           sentence,
           "[data-chunk], [data-punctuation], [data-slot-word]"
@@ -481,6 +494,7 @@ export function Manifesto() {
             duration: 0.04,
             ease: "power2.in",
             stagger: { each: 0.005, from: "start" },
+            force3D: false,
             immediateRender: false,
           },
           ACT.distill
@@ -495,6 +509,7 @@ export function Manifesto() {
             duration: 0.04,
             ease: "power2.in",
             stagger: { each: 0.005, from: "start" },
+            force3D: false,
             immediateRender: false,
           },
           ACT.distill + 0.03
@@ -533,6 +548,7 @@ export function Manifesto() {
             duration: 0.03,
             ease: "power2.in",
             stagger: { each: 0.003, from: "start" },
+            force3D: false,
             immediateRender: false,
           },
           ACT.disperse
