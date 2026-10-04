@@ -82,8 +82,10 @@ export const seo = {
   keywords: [
     "julien",
     "fernandes",
+    "creative",
     "developer",
     "engineer",
+    "maker",
     "portfolio",
     "paris",
   ],
