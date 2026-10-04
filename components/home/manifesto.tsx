@@ -45,9 +45,30 @@ const OPENING = "I build where disciplines overlap —"
 const BRIDGE = "The best technology does not ask to be understood."
 /** The last word of the closing line — the one that does not survive it. */
 const TAIL = "disappears."
-const GRAIN = ["size-0.5", "size-0.75", "size-0.5", "size-1"] as const
 /** Three decimals: fine enough to look exact, coarse enough to round-trip. */
 const place = (n: number) => Math.round(n * 1000) / 1000
+
+/**
+ * Four sizes of grain, and what each of them is for.
+ *
+ * The largest are the nearest: they climb furthest and are the first to be
+ * gone. The finest hang on longest and barely stir — a two-and-a-half times
+ * longer flight than the big ones, so there is still something in the air when
+ * everything else has landed. Without that spread the dust is one flat sheet
+ * of dots sliding sideways at the same speed, which is what particle work
+ * always looks like when nobody has thought about how far away each dot is.
+ *
+ * `reach` scales the climb, so depth is what carries the parallax. `flight` is
+ * the whole journey of one grain as a fraction of the closing beat — from a
+ * sixth of it for the heaviest to nearly half — so a longer ending is a
+ * slower one rather than the same thing with more scroll left over it.
+ */
+const DUST = [
+  { size: "size-1.5", tone: "bg-primary", reach: 1, flight: 0.17 },
+  { size: "size-1", tone: "bg-primary", reach: 0.7, flight: 0.23 },
+  { size: "size-0.75", tone: "bg-primary/80", reach: 0.45, flight: 0.33 },
+  { size: "size-0.5", tone: "bg-primary/50", reach: 0.28, flight: 0.46 },
+] as const
 
 /**
  * That word, already taken apart underneath itself.
@@ -65,13 +86,22 @@ const place = (n: number) => Math.round(n * 1000) / 1000
  * and throws a hydration mismatch. A value of three decimals fits in six
  * digits across this range, so it survives the round trip untouched.
  */
-const MOTES = Array.from({ length: 44 }, (_, index) => ({
-  x: place(2 + ((index * 0.618034) % 1) * 96),
-  y: place(scatter(index + 1) * 100),
-  size: GRAIN[index % GRAIN.length],
-  // A few grains are struck out, so the dust has depth instead of one voice.
-  tone: index % 4 === 0 ? "bg-primary/45" : "bg-primary",
-})).sort((a, b) => a.x - b.x)
+const MOTES = Array.from({ length: 96 }, (_, index) => {
+  const x = place(2 + ((index * 0.618034) % 1) * 96)
+
+  // Weight the heavy grains towards the thick of the word and let the fine
+  // ones thin out at its edges, which is how a cloud ends up shaped by
+  // whatever threw it. Taken from the grain's own position rather than its
+  // index, so it still holds once the array is sorted into reading order.
+  const centre = 1 - Math.abs((x - 50) / 48)
+  const bias = scatter(index + 71) * 0.65 + centre * 0.35
+
+  return {
+    x,
+    y: place(scatter(index + 1) * 100),
+    grain: DUST[bias > 0.78 ? 0 : bias > 0.58 ? 1 : bias > 0.32 ? 2 : 3],
+  }
+}).sort((a, b) => a.x - b.x)
 
 /** A stable number in [0, 1) — deterministic where Math.random is not. */
 function scatter(n: number) {
@@ -106,9 +136,24 @@ const ACT = {
   distill: 0.79,
   /** The closing line, arriving last and settling into the whole scene. */
   finale: [0.86, 0.9],
-  /** And then the last word of it lets go. */
-  disperse: 0.94,
+  /**
+   * And then the last word lets go. The ink goes first and quickly, the word
+   * diffuses behind it, and the dust it left is still in the air when the
+   * scene ends — an ending with something in it beats an ending at zero.
+   */
+  disperse: [0.93, 1],
 } as const
+
+/**
+ * Where the closing beat begins, as a fraction of the scroll — and the only
+ * number that decides how long the ending lasts.
+ *
+ * Everything above it is squeezed toward the top of the page to make room, and
+ * the difference is spent on the one beat worth spending it on: the last word
+ * coming apart. Tuning that from sixteen positions by hand every time is how
+ * timings drift out of step with each other, so it is done once here instead.
+ */
+const CLOSE = 0.845
 
 export function Manifesto() {
   const rootRef = useRef<HTMLElement>(null)
@@ -121,8 +166,17 @@ export function Manifesto() {
       const sentence = root?.querySelector<HTMLElement>("[data-sentence]")
       const bridge = root?.querySelector<HTMLElement>("[data-bridge]")
       const finale = root?.querySelector<HTMLElement>("[data-finale]")
+      const disperses = root?.querySelector<HTMLElement>("[data-disperses]")
 
-      if (!root || !scroller || !field || !sentence || !bridge || !finale) {
+      if (
+        !root ||
+        !scroller ||
+        !field ||
+        !sentence ||
+        !bridge ||
+        !finale ||
+        !disperses
+      ) {
         return
       }
 
@@ -135,7 +189,7 @@ export function Manifesto() {
       const pulses = slots.map(pick<HTMLElement>("[data-slot-pulse]"))
       const landed = slots.map(pick<HTMLElement>("[data-slot-word]"))
       const meters = collect<HTMLElement>(root, "[data-meter]")
-      const letters = collect<HTMLElement>(finale, "[data-letter]")
+      const letters = collect<HTMLElement>(disperses, "[data-letter]")
       const motes = collect<HTMLElement>(finale, "[data-mote]")
 
       if (modules.length !== DISCIPLINES.length) return
@@ -258,6 +312,20 @@ export function Manifesto() {
           }
         })
 
+        // The choreography above, packed into the scroll that is left for it.
+        // Every position and duration before the closing beat is scaled by the
+        // same factor, so the assembly keeps its shape — only faster to cross.
+        const pack = CLOSE / ACT.disperse[0]
+        const beat = {
+          settle: ACT.settle * pack,
+          flight: ACT.flight.map(([from, to]) => [from * pack, to * pack]),
+          resolve: ACT.resolve.map(([from, to]) => [from * pack, to * pack]),
+          bridge: [ACT.bridge[0] * pack, ACT.bridge[1] * pack],
+          distill: ACT.distill * pack,
+          finale: [ACT.finale[0] * pack, ACT.finale[1] * pack],
+          disperse: [CLOSE, 1],
+        } as const
+
         const timeline = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
@@ -280,7 +348,7 @@ export function Manifesto() {
         timeline.fromTo(
           sentence,
           { opacity: 0.4 },
-          { opacity: 1, duration: ACT.settle },
+          { opacity: 1, duration: beat.settle },
           0
         )
 
@@ -288,8 +356,8 @@ export function Manifesto() {
           timeline.fromTo(
             frame,
             { autoAlpha: 0 },
-            { autoAlpha: 1, duration: 0.04 },
-            0.02 + index * 0.012
+            { autoAlpha: 1, duration: 0.04 * pack },
+            pack * (0.02 + index * 0.012)
           )
         })
 
@@ -304,17 +372,17 @@ export function Manifesto() {
               autoAlpha: 1,
               scale: 1,
               rotation: tilt(index),
-              duration: 0.1,
+              duration: 0.1 * pack,
             },
-            0.01 + index * 0.02
+            pack * (0.01 + index * 0.02)
           )
         })
 
         // 2. Assembly — each module travels to the slot waiting for it and
         // resolves into its word, in reading order.
         modules.forEach((module, index) => {
-          const [leave, arrive] = ACT.flight[index]
-          const [land, shut] = ACT.resolve[index]
+          const [leave, arrive] = beat.flight[index]
+          const [land, shut] = beat.resolve[index]
           const travel = arrive - leave
           const bow = leave + travel * 0.56
           const body = bodies[index]
@@ -442,7 +510,7 @@ export function Manifesto() {
             timeline.fromTo(
               meter,
               { scaleX: 0 },
-              { scaleX: 1, duration: 0.03, immediateRender: false },
+              { scaleX: 1, duration: 0.03 * pack, immediateRender: false },
               land
             )
           }
@@ -456,11 +524,11 @@ export function Manifesto() {
           {
             opacity: 1,
             y: 0,
-            duration: ACT.bridge[1] - ACT.bridge[0],
+            duration: beat.bridge[1] - beat.bridge[0],
             ease: "power2.out",
             immediateRender: false,
           },
-          ACT.bridge[0]
+          beat.bridge[0]
         )
 
         // 3. Resolution — the assembled thought is read, then distilled away
@@ -500,13 +568,13 @@ export function Manifesto() {
           {
             opacity: 0,
             scale: 0.96,
-            duration: 0.04,
+            duration: 0.04 * pack,
             ease: "power2.in",
-            stagger: { each: 0.005, from: "start" },
+            stagger: { each: 0.005 * pack, from: "start" },
             force3D: false,
             immediateRender: false,
           },
-          ACT.distill
+          beat.distill
         )
 
         timeline.fromTo(
@@ -515,13 +583,13 @@ export function Manifesto() {
           {
             opacity: 0,
             scale: 0.96,
-            duration: 0.04,
+            duration: 0.04 * pack,
             ease: "power2.in",
-            stagger: { each: 0.005, from: "start" },
+            stagger: { each: 0.005 * pack, from: "start" },
             force3D: false,
             immediateRender: false,
           },
-          ACT.distill + 0.03
+          beat.distill + 0.03 * pack
         )
 
         // 4. The closing line, alone, arriving out of the space the others left.
@@ -538,58 +606,133 @@ export function Manifesto() {
             // thing left on screen, and it should be set like the rest of the
             // page rather than sitting inside one.
             clearProps: "filter",
-            duration: ACT.finale[1] - ACT.finale[0],
+            duration: beat.finale[1] - beat.finale[0],
             ease: "power2.out",
             immediateRender: false,
           },
-          ACT.finale[0]
+          beat.finale[0]
         )
 
-        // 5. And then the last word of it lets go: it dissolves upward in
-        // reading order, handing itself to the dust waiting underneath.
+        // 5. And then the last word of it lets go, in three passes that
+        // never overlap: the ink goes first, letter by letter and off the
+        // metronome; the word diffuses behind them as one piece; and the dust
+        // it left behind is still up when the scene runs out.
+        //
+        // Everything inside this beat is written as a proportion of the beat,
+        // so CLOSE is the only thing that has to move to make the ending
+        // longer: the wave, the flight of the dust and the haze that outlives
+        // it all stretch together and keep the rhythm they were given.
+        const [ink, cleared] = beat.disperse
+        const span = cleared - ink
+        const at = (fraction: number) => ink + fraction * span
+
+        // Left to right, but unevenly — paper does not let go of itself at
+        // even intervals, and the small jitter keeps the word from looking
+        // like a progress bar emptying.
+        letters.forEach((letter, index) => {
+          timeline.fromTo(
+            letter,
+            { opacity: 1 },
+            {
+              opacity: 0,
+              duration: span * 0.23,
+              ease: "power2.in",
+              // Held, then dropped: the word thins out before it goes.
+              force3D: false,
+              immediateRender: false,
+            },
+            at(index * 0.031 + scatter(index + 3) * 0.021)
+          )
+        })
+
+        // The word itself, once its letters are already leaving. Lifted, drawn
+        // in a little, and losing its edges — released rather than dissolved,
+        // which is a different thing to watch.
+        //
+        // On the word and not on the letters, so all eleven glyphs diffuse
+        // inside a single rasterised layer rather than each being promoted out
+        // of the line it belongs to.
         timeline.fromTo(
-          letters,
-          { opacity: 1, y: 0, scale: 1 },
+          disperses,
+          { scale: 1, y: 0, filter: "blur(0px)" },
           {
-            opacity: 0,
-            y: -12,
             scale: 0.94,
-            duration: 0.03,
-            ease: "power2.in",
-            stagger: { each: 0.003, from: "start" },
+            y: -20,
+            filter: "blur(4px)",
+            clearProps: "filter",
+            duration: span,
+            ease: "power1.out",
             force3D: false,
             immediateRender: false,
           },
-          ACT.disperse
+          ink
         )
 
-        // Released left to right with the letters, climbing and opening as it
-        // goes, so the word comes apart into a cloud instead of translating.
+        // The dust. Released left to right across the first stretch of the
+        // beat, and every grain flies on its own two-legged path: a burst,
+        // mostly upward, then a sideways spread as it slows down. A straight
+        // line at one speed is what makes particle work look like a screensaver.
+        //
+        // The budget is the beat: released by 0.46 of it, and the longest
+        // flight is 0.46 of it, so the last grain lands at 0.92 and the beat
+        // closes on empty air. The grains are looked up by index because they
+        // were rendered straight out of MOTES, in order.
         motes.forEach((mote, index) => {
           const column = index / Math.max(motes.length - 1, 1)
-          const released = ACT.disperse + column * 0.025
-          const drift = (column - 0.5) * 130 + (scatter(index + 11) - 0.5) * 60
-          const climb = 24 + scatter(index + 29) * 84
+          const { reach, flight } = MOTES[index].grain
+          const life = flight * span
+          const released = at(column * 0.43 + scatter(index + 17) * 0.03)
+
+          // How high it gets is how near it was; where it ends up sideways is
+          // where it happened to be born. Two different questions.
+          const climb = (8 + reach * 84) * (0.7 + scatter(index + 23) * 0.6)
+          const drift = (column - 0.5) * 64 + (scatter(index + 11) - 0.5) * 48
 
           timeline
             .fromTo(
               mote,
-              { opacity: 0 },
-              { opacity: 0.9, duration: 0.005, immediateRender: false },
+              { opacity: 0, scale: 0.5 },
+              {
+                opacity: 0.35 + reach * 0.6,
+                scale: 0.9,
+                duration: life * 0.16,
+                immediateRender: false,
+              },
               released
             )
+            // Up first, and fast.
             .fromTo(
               mote,
               { x: 0, y: 0 },
               {
-                x: drift,
-                y: -climb,
-                opacity: 0,
-                duration: 0.028,
-                ease: "power1.out",
+                x: drift * 0.25,
+                y: -climb * 0.78,
+                duration: life * 0.42,
+                ease: "power2.out",
+                force3D: false,
                 immediateRender: false,
               },
-              released + 0.004
+              released
+            )
+            // Then out and down to a stop, shrinking as it thins away.
+            .fromTo(
+              mote,
+              {
+                x: () => drift * 0.25,
+                y: () => -climb * 0.78,
+                scale: 0.9,
+              },
+              {
+                x: drift,
+                y: -climb,
+                scale: 0.4,
+                opacity: 0,
+                duration: life * 0.58,
+                ease: "power1.out",
+                force3D: false,
+                immediateRender: false,
+              },
+              released + life * 0.42
             )
         })
 
@@ -616,7 +759,7 @@ export function Manifesto() {
           is not wanted, which is what reduced motion gets. */}
       <div
         data-scene
-        className="relative h-[320svh] motion-reduce:h-auto motion-reduce:pt-24 md:motion-reduce:pt-32"
+        className="relative h-[360svh] motion-reduce:h-auto motion-reduce:pt-24 md:motion-reduce:pt-32"
       >
         <div
           data-stage
@@ -695,18 +838,24 @@ export function Manifesto() {
                   className="font-heading text-[clamp(2rem,7.4vw,5.5rem)] leading-[1.04] text-balance italic opacity-100 motion-safe:opacity-0"
                 >
                   It simply{" "}
-                  <span data-disperses className="relative inline-block">
-                    {/* One box per character: they have to be separable to
-                            be released in reading order. */}
-                    {Array.from(TAIL).map((character, index) => (
-                      <span
-                        key={`${character}-${index}`}
-                        data-letter
-                        className="inline-block"
-                      >
-                        {character}
-                      </span>
-                    ))}
+                  {/* The letters and the dust are boxed separately on
+                      purpose: the word itself is lifted and diffused as one
+                      piece while its letters leave it, and the grains must not
+                      inherit either transform. */}
+                  <span className="relative inline-block">
+                    <span data-disperses className="inline-block">
+                      {/* One box per character: they have to be separable to
+                              be released in reading order. */}
+                      {Array.from(TAIL).map((character, index) => (
+                        <span
+                          key={`${character}-${index}`}
+                          data-letter
+                          className="inline-block"
+                        >
+                          {character}
+                        </span>
+                      ))}
+                    </span>
 
                     <span
                       data-motes
@@ -718,9 +867,11 @@ export function Manifesto() {
                           key={index}
                           data-mote
                           className={cn(
-                            "absolute rounded-full",
-                            mote.size,
-                            mote.tone
+                            // Held back until its own tween releases it: the
+                            // dust is under the word, not printed on it.
+                            "absolute rounded-full opacity-0",
+                            mote.grain.size,
+                            mote.grain.tone
                           )}
                           style={{
                             left: `${mote.x}%`,
