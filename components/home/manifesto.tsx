@@ -46,6 +46,8 @@ const BRIDGE = "The best technology does not ask to be understood."
 /** The last word of the closing line — the one that does not survive it. */
 const TAIL = "disappears."
 const GRAIN = ["size-0.5", "size-0.75", "size-0.5", "size-1"] as const
+/** Three decimals: fine enough to look exact, coarse enough to round-trip. */
+const place = (n: number) => Math.round(n * 1000) / 1000
 
 /**
  * That word, already taken apart underneath itself.
@@ -55,10 +57,17 @@ const GRAIN = ["size-0.5", "size-0.75", "size-0.5", "size-1"] as const
  * right so it can be released in reading order. Every number comes from a
  * fixed sequence rather than a chance: the dispersal is scrubbed against
  * scroll, and anything recomputed on refresh would reshuffle under the reader.
+ *
+ * Placed at three decimals, which is the whole reason this can be rendered at
+ * all. These are inline styles, and the CSSOM serialises a number back to six
+ * significant digits — so `61.331264%` is read out of the DOM as `61.3313%`,
+ * React finds the attribute it hydrated disagreeing with the one it computed,
+ * and throws a hydration mismatch. A value of three decimals fits in six
+ * digits across this range, so it survives the round trip untouched.
  */
 const MOTES = Array.from({ length: 44 }, (_, index) => ({
-  x: 2 + ((index * 0.618034) % 1) * 96,
-  y: scatter(index + 1) * 100,
+  x: place(2 + ((index * 0.618034) % 1) * 96),
+  y: place(scatter(index + 1) * 100),
   size: GRAIN[index % GRAIN.length],
   // A few grains are struck out, so the dust has depth instead of one voice.
   tone: index % 4 === 0 ? "bg-primary/45" : "bg-primary",
