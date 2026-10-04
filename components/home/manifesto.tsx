@@ -15,8 +15,9 @@ import { DisciplineModule, type DisciplineId } from "./manifesto-modules"
  * themselves lie loose around the viewport as physical modules — a window, a
  * listing, a board, a signal. Scrolling pulls each one into its slot in
  * reading order, where it collapses and hands over its word; once the thought
- * is whole it is distilled away, left to right, until only "It simply feels
- * right." is left standing.
+ * is whole it is distilled away, left to right, until only "It simply" is
+ * left standing — and that gives up its last word to the dust it was always
+ * made of.
  *
  * Every destination is measured from element bounds instead of being written
  * down, so the assembly holds together at any width the type scale can reach.
@@ -42,6 +43,32 @@ const DISCIPLINES: readonly Discipline[] = [
 
 const OPENING = "I build where disciplines overlap —"
 const BRIDGE = "The best technology does not ask to be understood."
+/** The last word of the closing line — the one that does not survive it. */
+const TAIL = "disappears."
+const GRAIN = ["size-0.5", "size-0.75", "size-0.5", "size-1"] as const
+
+/**
+ * That word, already taken apart underneath itself.
+ *
+ * Grains of it, laid across the footprint of the word so the dust rises out of
+ * the letter it came from rather than out of a box, and pre-sorted left to
+ * right so it can be released in reading order. Every number comes from a
+ * fixed sequence rather than a chance: the dispersal is scrubbed against
+ * scroll, and anything recomputed on refresh would reshuffle under the reader.
+ */
+const MOTES = Array.from({ length: 44 }, (_, index) => ({
+  x: 2 + ((index * 0.618034) % 1) * 96,
+  y: scatter(index + 1) * 100,
+  size: GRAIN[index % GRAIN.length],
+  // A few grains are struck out, so the dust has depth instead of one voice.
+  tone: index % 4 === 0 ? "bg-primary/45" : "bg-primary",
+})).sort((a, b) => a.x - b.x)
+
+/** A stable number in [0, 1) — deterministic where Math.random is not. */
+function scatter(n: number) {
+  const value = Math.sin(n * 12.9898) * 43758.5453
+  return value - Math.floor(value)
+}
 
 /**
  * The choreography, as fractions of the scene's scroll progress. Times are
@@ -69,7 +96,9 @@ const ACT = {
   /** Hold the finished thought, then distil it away. */
   distill: 0.79,
   /** The closing line, arriving last and settling into the whole scene. */
-  finale: [0.86, 1],
+  finale: [0.86, 0.9],
+  /** And then the last word of it lets go. */
+  disperse: 0.94,
 } as const
 
 export function Manifesto() {
@@ -97,6 +126,8 @@ export function Manifesto() {
       const pulses = slots.map(pick<HTMLElement>("[data-slot-pulse]"))
       const landed = slots.map(pick<HTMLElement>("[data-slot-word]"))
       const meters = collect<HTMLElement>(root, "[data-meter]")
+      const letters = collect<HTMLElement>(finale, "[data-letter]")
+      const motes = collect<HTMLElement>(finale, "[data-mote]")
 
       if (modules.length !== DISCIPLINES.length) return
 
@@ -428,6 +459,14 @@ export function Manifesto() {
         // the commas go with the word they introduce, and the full stop
         // goes last, instead of the list being left hanging on the marks
         // after its words have gone.
+        //
+        // Nothing travels vertically on the way out. At 1.08 the leading is
+        // shorter than the type is tall, so a line's descenders already reach
+        // into the space of the next one: lifting a word while it is still
+        // legible dropped it straight through the line above it. Each word
+        // contracts inside its own box instead — a transform never reflows,
+        // so it cannot reach its neighbours — and the sweep is carried by the
+        // stagger alone.
         const cascade = collect<HTMLElement>(
           sentence,
           "[data-chunk], [data-punctuation], [data-slot-word]"
@@ -435,11 +474,10 @@ export function Manifesto() {
 
         timeline.fromTo(
           cascade,
-          { opacity: 1, y: 0, scale: 1 },
+          { opacity: 1, scale: 1 },
           {
             opacity: 0,
-            y: -14,
-            scale: 0.98,
+            scale: 0.96,
             duration: 0.04,
             ease: "power2.in",
             stagger: { each: 0.005, from: "start" },
@@ -450,10 +488,10 @@ export function Manifesto() {
 
         timeline.fromTo(
           collect<HTMLElement>(bridge, "[data-chunk]"),
-          { opacity: 1, y: 0 },
+          { opacity: 1, scale: 1 },
           {
             opacity: 0,
-            y: -10,
+            scale: 0.96,
             duration: 0.04,
             ease: "power2.in",
             stagger: { each: 0.005, from: "start" },
@@ -482,6 +520,53 @@ export function Manifesto() {
           },
           ACT.finale[0]
         )
+
+        // 5. And then the last word of it lets go: it dissolves upward in
+        // reading order, handing itself to the dust waiting underneath.
+        timeline.fromTo(
+          letters,
+          { opacity: 1, y: 0, scale: 1 },
+          {
+            opacity: 0,
+            y: -12,
+            scale: 0.94,
+            duration: 0.03,
+            ease: "power2.in",
+            stagger: { each: 0.003, from: "start" },
+            immediateRender: false,
+          },
+          ACT.disperse
+        )
+
+        // Released left to right with the letters, climbing and opening as it
+        // goes, so the word comes apart into a cloud instead of translating.
+        motes.forEach((mote, index) => {
+          const column = index / Math.max(motes.length - 1, 1)
+          const released = ACT.disperse + column * 0.025
+          const drift = (column - 0.5) * 130 + (scatter(index + 11) - 0.5) * 60
+          const climb = 24 + scatter(index + 29) * 84
+
+          timeline
+            .fromTo(
+              mote,
+              { opacity: 0 },
+              { opacity: 0.9, duration: 0.005, immediateRender: false },
+              released
+            )
+            .fromTo(
+              mote,
+              { x: 0, y: 0 },
+              {
+                x: drift,
+                y: -climb,
+                opacity: 0,
+                duration: 0.028,
+                ease: "power1.out",
+                immediateRender: false,
+              },
+              released + 0.004
+            )
+        })
 
         // An empty tween spanning the whole timeline, so its duration is
         // exactly 1 and the positions above are the scroll percentages.
@@ -547,10 +632,13 @@ export function Manifesto() {
                       {/* Punctuation rides ahead of its own word, so the list
                           reads as assembled only as far as it has actually
                           been, and is carried off by the distillation with the
-                          word it introduces. The spaces stay outside the span,
-                          where an inline-block would swallow them. */}
+                          word it introduces. A comma takes no space before it
+                          and "and" takes one on both sides, which is only
+                          English — and every one of those spaces lives outside
+                          the span, where an inline-block would swallow it. */}
                       {index > 0 ? (
                         <>
+                          {index === 3 ? " " : null}
                           <span data-punctuation className="inline-block">
                             {index === 3 ? "and" : ","}
                           </span>{" "}
@@ -581,7 +669,42 @@ export function Manifesto() {
                   data-finale
                   className="font-heading text-[clamp(2rem,7.4vw,5.5rem)] leading-[1.04] text-balance italic opacity-100 motion-safe:opacity-0"
                 >
-                  It simply feels right.
+                  It simply{" "}
+                  <span data-disperses className="relative inline-block">
+                    {/* One box per character: they have to be separable to
+                            be released in reading order. */}
+                    {Array.from(TAIL).map((character, index) => (
+                      <span
+                        key={`${character}-${index}`}
+                        data-letter
+                        className="inline-block"
+                      >
+                        {character}
+                      </span>
+                    ))}
+
+                    <span
+                      data-motes
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 motion-reduce:hidden"
+                    >
+                      {MOTES.map((mote, index) => (
+                        <span
+                          key={index}
+                          data-mote
+                          className={cn(
+                            "absolute rounded-full",
+                            mote.size,
+                            mote.tone
+                          )}
+                          style={{
+                            left: `${mote.x}%`,
+                            top: `${mote.y}%`,
+                          }}
+                        />
+                      ))}
+                    </span>
+                  </span>
                 </p>
               </div>
             </div>
@@ -635,12 +758,12 @@ function Slot({ word }: { word: string }) {
       <span
         data-slot-frame
         aria-hidden
-        className="absolute -inset-x-[0.06em] -inset-y-[0.08em] rounded-[0.18em] border border-foreground/15 opacity-0"
+        className="absolute inset-x-[-0.06em] inset-y-[-0.08em] rounded-[0.18em] border border-foreground/15 opacity-0"
       />
       <span
         data-slot-pulse
         aria-hidden
-        className="absolute -inset-x-[0.06em] -inset-y-[0.08em] rounded-[0.18em] border border-primary opacity-0"
+        className="absolute inset-x-[-0.06em] inset-y-[-0.08em] rounded-[0.18em] border border-primary opacity-0"
       />
       <span
         data-slot-word

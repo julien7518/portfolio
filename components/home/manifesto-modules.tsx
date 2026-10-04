@@ -60,22 +60,22 @@ function Window() {
   return (
     <div className="relative flex size-full flex-col">
       <div className="flex h-[21%] items-center gap-[4%] border-b border-foreground/10 px-[9%]">
-        <span className="size-[3px] shrink-0 rounded-full bg-primary" />
-        <span className="size-[3px] shrink-0 rounded-full bg-foreground/25" />
-        <span className="size-[3px] shrink-0 rounded-full bg-foreground/25" />
-        <span className="ml-auto h-[2px] w-[26%] rounded-full bg-foreground/12" />
+        <span className="size-0.75 shrink-0 rounded-full bg-primary" />
+        <span className="size-0.75 shrink-0 rounded-full bg-foreground/25" />
+        <span className="size-0.75 shrink-0 rounded-full bg-foreground/25" />
+        <span className="ml-auto h-0.5 w-[26%] rounded-full bg-foreground/12" />
       </div>
 
       <div className="flex h-[79%]">
         <div className="flex w-[27%] flex-col justify-center gap-[9%] border-r border-foreground/10 pr-[16%] pl-[14%]">
-          <span className="h-[2px] w-full rounded-full bg-foreground/22" />
-          <span className="h-[2px] w-[64%] rounded-full bg-foreground/12" />
-          <span className="h-[2px] w-[86%] rounded-full bg-foreground/12" />
-          <span className="h-[2px] w-[48%] rounded-full bg-foreground/12" />
+          <span className="h-0.5 w-full rounded-full bg-foreground/22" />
+          <span className="h-0.5 w-[64%] rounded-full bg-foreground/12" />
+          <span className="h-0.5 w-[86%] rounded-full bg-foreground/12" />
+          <span className="h-0.5 w-[48%] rounded-full bg-foreground/12" />
         </div>
 
         <div className="relative flex flex-1 flex-col justify-center gap-[8%] overflow-hidden pr-[11%] pl-[12%]">
-          <span className="h-[3px] w-[44%] rounded-full bg-foreground/32" />
+          <span className="h-0.75 w-[44%] rounded-full bg-foreground/32" />
 
           <div className="grid grid-cols-3 gap-[6%]">
             <Tile />
@@ -86,12 +86,12 @@ function Window() {
             <Tile />
           </div>
 
-          <span className="h-[2px] w-[72%] rounded-full bg-foreground/12" />
+          <span className="h-0.5 w-[72%] rounded-full bg-foreground/12" />
 
           {/* One column of the layout, still being resolved. */}
           <span
             data-detail
-            className="absolute inset-x-[12%] top-0 h-[8%] bg-foreground/[0.08]"
+            className="absolute inset-x-[12%] top-0 h-[8%] bg-foreground/8"
           />
         </div>
       </div>
@@ -104,8 +104,8 @@ function Tile({ live = false }: { live?: boolean }) {
     <span
       className={
         live
-          ? "aspect-[5/4] rounded-[2px] border border-primary/45 bg-primary/20"
-          : "aspect-[5/4] rounded-[2px] border border-foreground/12 bg-foreground/[0.04]"
+          ? "aspect-5/4 rounded-xs border border-primary/45 bg-primary/20"
+          : "aspect-5/4 rounded-xs border border-foreground/12 bg-foreground/4"
       }
     />
   )
@@ -128,7 +128,7 @@ function Listing() {
       {LISTING.map(([indent, width, tone]) => (
         <span
           key={`${indent}-${width}`}
-          className={`h-[3px] rounded-full ${tone}`}
+          className={`h-0.75 rounded-full ${tone}`}
           style={{ marginLeft: `${indent * 9}%`, width: `${width}%` }}
         />
       ))}
@@ -136,7 +136,7 @@ function Listing() {
       {/* The caret at the end of the last line. */}
       <span
         data-detail
-        className="absolute right-[12%] bottom-[16%] h-[9px] w-[2px] bg-primary/80"
+        className="absolute right-[12%] bottom-[16%] h-2.25 w-0.5 bg-primary/80"
       />
     </div>
   )
@@ -205,7 +205,7 @@ function Board() {
         width="36"
         height="36"
         rx="3"
-        className="fill-foreground/[0.05] stroke-foreground/35"
+        className="fill-foreground/5 stroke-foreground/35"
         strokeWidth="0.7"
       />
 
@@ -283,7 +283,7 @@ function Signal() {
       {/* A halo around the hub, built from two soft discs rather than a
           gradient so it costs nothing to composite. */}
       <circle cx="58" cy="46" r="15" className="fill-primary/[0.07]" />
-      <circle cx="58" cy="46" r="9" className="fill-primary/[0.1]" />
+      <circle cx="58" cy="46" r="9" className="fill-primary/1" />
 
       <g className="fill-foreground/30">
         {NODES.filter((_, index) => index !== 4).map(([x, y]) => (
