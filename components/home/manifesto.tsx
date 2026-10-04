@@ -96,7 +96,6 @@ export function Manifesto() {
       const frames = slots.map(pick<HTMLElement>("[data-slot-frame]"))
       const pulses = slots.map(pick<HTMLElement>("[data-slot-pulse]"))
       const landed = slots.map(pick<HTMLElement>("[data-slot-word]"))
-      const links = collect<SVGLineElement>(root, "[data-link]")
       const meters = collect<HTMLElement>(root, "[data-meter]")
 
       if (modules.length !== DISCIPLINES.length) return
@@ -283,7 +282,6 @@ export function Manifesto() {
           const frame = frames[index]
           const pulse = pulses[index]
           const word = landed[index]
-          const link = links[index]
 
           // Two legs through a control point, so the approach curves instead of
           // sliding on rails.
@@ -316,46 +314,6 @@ export function Manifesto() {
               },
               bow
             )
-
-          // The link draws itself from the module to the slot as it travels,
-          // then is dropped once the two are one.
-          if (link) {
-            timeline
-              .fromTo(
-                link,
-                {
-                  autoAlpha: 0,
-                  attr: {
-                    x1: () => centre(modules[index], field).x,
-                    y1: () => centre(modules[index], field).y,
-                    x2: () => centre(modules[index], field).x,
-                    y2: () => centre(modules[index], field).y,
-                  },
-                },
-                {
-                  autoAlpha: 0.5,
-                  attr: {
-                    x2: () => centre(slots[index], field).x,
-                    y2: () => centre(slots[index], field).y,
-                  },
-                  duration: travel,
-                  ease: "power1.inOut",
-                  immediateRender: false,
-                },
-                leave
-              )
-              .fromTo(
-                link,
-                { strokeDashoffset: 0 },
-                {
-                  strokeDashoffset: -28,
-                  duration: travel,
-                  immediateRender: false,
-                },
-                leave
-              )
-              .to(link, { autoAlpha: 0, duration: 0.02 }, land)
-          }
 
           // Landing: the body folds away into the word it was carrying.
           if (body) {
@@ -576,23 +534,6 @@ export function Manifesto() {
             data-field
             className="relative flex flex-1 items-center justify-center"
           >
-            {/* The links each module travels along. Drawn in the field's own
-                pixel space, so the coordinates below are the ones measured. */}
-            <svg
-              aria-hidden
-              className="pointer-events-none absolute inset-0 size-full"
-            >
-              {DISCIPLINES.map((discipline) => (
-                <line
-                  key={discipline.id}
-                  data-link
-                  strokeDasharray="1 6"
-                  className="stroke-foreground/40 opacity-0"
-                  strokeWidth="1"
-                />
-              ))}
-            </svg>
-
             <div className="relative mx-auto w-full max-w-4xl md:max-w-5xl lg:max-w-6xl">
               <p
                 data-sentence
