@@ -16,6 +16,10 @@ export const identity = {
   initials: "JF",
   /** One line describing the work, shown in the hero. */
   role: "Creative technologist",
+  /** The short status line on the Me page's identity card. */
+  status: "Engineering student",
+  /** Fields of practice, read in order on the Me page's identity card. */
+  focus: ["Web", "Native", "Embedded", "AI"],
   /** Longer phrasing for meta descriptions. */
   tagline: "Engineering student based in Paris, France",
 } as const

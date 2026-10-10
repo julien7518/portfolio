@@ -1,4 +1,8 @@
 import { AnimatedTitle } from "@/components/ui/animated-title"
+import { PortraitSection } from "@/components/me/portrait-section"
+import { IdentityCard } from "@/components/me/identity-card"
+import { VersionTimeline } from "@/components/me/version-timeline"
+import { Workbench } from "@/components/me/workbench"
 import { getAge } from "@/lib/utils"
 
 export default function Me() {
@@ -10,7 +14,10 @@ export default function Me() {
         subtitle2="Student"
         reverse
       />
-      <div></div>
+      <PortraitSection />
+      <IdentityCard />
+      <VersionTimeline />
+      <Workbench />
     </div>
   )
 }
