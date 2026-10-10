@@ -1,0 +1,717 @@
+.experience {
+  position: relative;
+  isolation: isolate;
+  margin-top: 64px;
+}
+.editorial {
+  position: relative;
+  z-index: 1;
+}
+.rule {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-bottom: 56px;
+  font:
+    10px/1.5 var(--font-mono),
+    monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rule h2 {
+  font: inherit;
+}
+.rule span {
+  color: var(--muted-foreground);
+  text-align: right;
+}
+.micro {
+  font:
+    10px/1.7 var(--font-mono),
+    monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.takeApart {
+  padding-bottom: 160px;
+}
+.portraitGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+.portrait {
+  grid-column: 1 / 6;
+  margin: 20px 24px 0 12px;
+}
+.photo {
+  position: relative;
+}
+.photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(1);
+}
+.photo::before {
+  content: "";
+  position: absolute;
+  inset: -16px 22px 24px -12px;
+  border: 1px solid var(--border);
+  z-index: -1;
+}
+.photo::after {
+  content: "";
+  position: absolute;
+  width: 54%;
+  height: 25%;
+  right: -17px;
+  bottom: -15px;
+  border-right: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
+  opacity: 0.3;
+}
+.photoFrame {
+  position: absolute;
+  left: -24px;
+  right: -25px;
+  top: 34%;
+  height: 29%;
+  border-left: 1px solid var(--muted-foreground);
+  border-right: 1px solid var(--muted-foreground);
+}
+.photoFrame::before,
+.photoFrame::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 1px;
+  background: var(--muted-foreground);
+}
+.photoFrame::after {
+  bottom: 0;
+  right: 0;
+}
+.photoMeasure {
+  position: absolute;
+  top: 10px;
+  right: -22px;
+  writing-mode: vertical-rl;
+  font:
+    9px/1 var(--font-mono),
+    monospace;
+  letter-spacing: 0.1em;
+  color: var(--muted-foreground);
+}
+.portrait figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 30px;
+  font:
+    9px/1.6 var(--font-mono),
+    monospace;
+  color: var(--muted-foreground);
+}
+.originCopy {
+  grid-column: 7 / 13;
+  padding-top: 12px;
+}
+.originCopy h2,
+.beyond h2,
+.current h2 {
+  font-family: var(--font-heading), serif;
+  font-size: clamp(48px, 5.2vw, 88px);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+.originCopy h2 {
+  max-width: 700px;
+  margin: 28px 0 36px;
+}
+.bodyCopy {
+  max-width: 470px;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--muted-foreground);
+}
+.bodyCopy p + p {
+  margin-top: 20px;
+}
+.positioning {
+  max-width: 470px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  margin-top: 34px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.beyond {
+  padding-bottom: 150px;
+}
+.beyond h2 {
+  margin-left: 8.5%;
+  font-size: clamp(56px, 7vw, 112px);
+}
+.humanParts {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 74px;
+}
+.humanParts > div {
+  position: relative;
+  border-top: 1px solid var(--muted-foreground);
+  padding-top: 18px;
+}
+.humanParts dt {
+  font:
+    10px/1.6 var(--font-mono),
+    monospace;
+  letter-spacing: 0.12em;
+}
+.humanParts dt span {
+  color: var(--muted-foreground);
+}
+.humanParts dd:not(.period):not(.years) {
+  font-family: var(--font-heading), serif;
+  font-size: clamp(32px, 3.5vw, 56px);
+  line-height: 1.05;
+  margin-top: 34px;
+}
+.service {
+  grid-column: 6 / 10;
+}
+.endurance {
+  grid-column: 2 / 6;
+  margin-top: 16px;
+}
+.discipline {
+  grid-column: 8 / 13;
+  margin-top: 12px;
+}
+.period {
+  font:
+    11px/1.6 var(--font-mono),
+    monospace;
+  color: var(--muted-foreground);
+  margin-top: 24px;
+}
+.partMark {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  font: 28px/1 var(--font-heading);
+  color: var(--muted-foreground);
+}
+.endurance em {
+  font-style: italic;
+}
+.distance {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  height: 42px;
+  margin-top: 32px;
+}
+.distance span {
+  width: 1px;
+  height: 14px;
+  background: var(--border);
+}
+.distance span:nth-child(2) {
+  height: 25px;
+}
+.distance span:nth-child(3) {
+  height: 40px;
+}
+.distance span:nth-child(4) {
+  height: 25px;
+}
+.years {
+  margin-top: 30px;
+  font:
+    clamp(25px, 3vw, 44px)/1.1 var(--font-mono),
+    monospace;
+  letter-spacing: -0.06em;
+}
+.years span {
+  font-size: 18px;
+  color: var(--muted-foreground);
+}
+.humanConclusion {
+  margin: 72px 0 0 50%;
+  max-width: 520px;
+  font:
+    30px/1.2 var(--font-heading),
+    serif;
+}
+.versions {
+  padding-bottom: 130px;
+}
+.versionGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px;
+}
+.versionScene {
+  grid-column: 1 / 6;
+}
+.versionSticky {
+  position: sticky;
+  top: 70px;
+  height: calc(100svh - 140px);
+  max-height: 850px;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+.versionReadout {
+  position: relative;
+  height: 150px;
+  margin-top: 22px;
+}
+.versionReadout span {
+  position: absolute;
+  inset: 0;
+  font:
+    clamp(76px, 10vw, 158px)/1 var(--font-mono),
+    monospace;
+  letter-spacing: -0.09em;
+  opacity: 0;
+}
+.versionReadout span:first-child {
+  opacity: 1;
+}
+.sceneNote {
+  margin-top: auto;
+  font:
+    26px/1.2 var(--font-heading),
+    serif;
+}
+.releaseTraces {
+  display: flex;
+  gap: 18px;
+  margin-top: 30px;
+  font:
+    10px/1 var(--font-mono),
+    monospace;
+  color: var(--muted-foreground);
+}
+.releaseTraces span {
+  opacity: 0.25;
+}
+.releaseTraces span:first-child {
+  opacity: 1;
+}
+.releaseList {
+  grid-column: 7 / 13;
+  list-style: none;
+  padding: 0;
+}
+.releaseList li {
+  position: relative;
+  min-height: 55svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-top: 1px solid var(--border);
+  padding: 48px 0;
+}
+.releaseMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  font:
+    11px/1.6 var(--font-mono),
+    monospace;
+}
+.releaseMeta span:last-child {
+  color: var(--muted-foreground);
+}
+.releaseList h3 {
+  font:
+    12px/1.6 var(--font-mono),
+    monospace;
+  letter-spacing: 0.12em;
+  margin: 42px 0 20px;
+}
+.releaseList li > p {
+  max-width: 510px;
+  font:
+    clamp(25px, 2.5vw, 38px)/1.22 var(--font-heading),
+    serif;
+}
+.releaseIndex {
+  margin-top: 36px;
+  font:
+    9px/1.6 var(--font-mono),
+    monospace;
+  letter-spacing: 0.12em;
+  color: var(--muted-foreground);
+}
+.releaseList li:nth-child(2) {
+  padding-left: 6%;
+}
+.releaseList li:nth-child(3) {
+  padding-left: 3%;
+}
+.releaseList li:nth-child(n + 4) {
+  padding-left: 0;
+}
+.current {
+  padding-bottom: 40px;
+}
+.currentCopy {
+  margin: 70px 0 90px 50%;
+}
+.currentCopy h2 {
+  font-size: clamp(48px, 5.2vw, 80px);
+}
+.currentCopy > p {
+  max-width: 470px;
+  margin-top: 30px;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--muted-foreground);
+}
+.finale {
+  border-top: 1px solid var(--border);
+  padding: 70px 0 40px;
+}
+.finale > p {
+  font:
+    clamp(50px, 7.5vw, 120px)/1.02 var(--font-heading),
+    serif;
+  letter-spacing: -0.03em;
+}
+.finale em {
+  font-style: normal;
+  margin-left: 8%;
+}
+.finale > span {
+  display: block;
+  margin-top: 50px;
+  text-align: right;
+}
+.diagramTrack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.diagramSticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+}
+.diagram {
+  width: 43%;
+  height: min(74svh, 740px);
+  overflow: visible;
+}
+.construction {
+  stroke: var(--foreground);
+  opacity: 0.12;
+  stroke-width: 0.7;
+}
+.connections {
+  stroke: var(--muted-foreground);
+  opacity: 0.38;
+  stroke-width: 1;
+}
+.systemPart {
+  stroke: var(--muted-foreground);
+  stroke-width: 1;
+  fill: var(--background);
+  fill-opacity: 0.7;
+}
+.systemPart text,
+.componentLabels text {
+  fill: var(--muted-foreground);
+  stroke: none;
+  font:
+    9px var(--font-mono),
+    monospace;
+  letter-spacing: 1px;
+}
+.systemPart > :not(rect):not(text) {
+  fill: none;
+}
+.componentLabels {
+  opacity: 0;
+}
+.signalRoute {
+  stroke: var(--border);
+  stroke-width: 0.75;
+  stroke-dasharray: 2 6;
+}
+.signal {
+  fill: var(--primary);
+}
+@media (min-width: 1600px) {
+  .experience {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+@media (max-width: 1023px) and (min-width: 768px) {
+  .originCopy h2 {
+    font-size: 52px;
+  }
+  .portrait {
+    margin-right: 10px;
+  }
+  .bodyCopy,
+  .positioning {
+    font-size: 14px;
+  }
+  .versionReadout span {
+    font-size: 86px;
+  }
+  .humanConclusion {
+    font-size: 27px;
+  }
+}
+@media (max-width: 767px) {
+  .experience {
+    margin-top: 44px;
+  }
+  .rule {
+    margin-bottom: 36px;
+    font-size: 9px;
+    gap: 10px;
+  }
+  .rule span {
+    max-width: 130px;
+  }
+  .takeApart,
+  .beyond {
+    padding-bottom: 90px;
+  }
+  .portraitGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 42px;
+  }
+  .portrait {
+    width: calc(100% - 22px);
+    margin: 12px 11px 0;
+  }
+  .photoFrame {
+    left: -16px;
+    right: -16px;
+  }
+  .photoMeasure {
+    right: -17px;
+    font-size: 8px;
+  }
+  .portrait figcaption {
+    font-size: 8px;
+  }
+  .originCopy {
+    padding-top: 0;
+  }
+  .originCopy h2 {
+    font-size: clamp(46px, 12vw, 72px);
+    margin-top: 22px;
+  }
+  .bodyCopy,
+  .positioning {
+    font-size: 15px;
+  }
+  .beyond h2 {
+    margin-left: 0;
+    font-size: 56px;
+  }
+  .humanParts {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    margin-top: 46px;
+  }
+  .humanParts > div {
+    margin-top: 0;
+  }
+  .service {
+    margin-left: 18%;
+  }
+  .endurance {
+    margin-right: 20%;
+  }
+  .discipline {
+    margin-left: 10%;
+  }
+  .humanParts dd:not(.period):not(.years) {
+    font-size: 38px;
+    margin-top: 24px;
+  }
+  .years {
+    font-size: 35px;
+  }
+  .humanConclusion {
+    margin: 46px 0 0;
+    font-size: 28px;
+  }
+  .versionGrid {
+    display: block;
+  }
+  .versionScene {
+    display: none;
+  }
+  .versions {
+    padding-bottom: 80px;
+  }
+  .releaseList li {
+    min-height: 0;
+    padding: 40px 0 46px !important;
+  }
+  .releaseMeta span:first-child {
+    font-size: 44px;
+    letter-spacing: -0.08em;
+    line-height: 1;
+  }
+  .releaseList h3 {
+    margin-top: 28px;
+    font-size: 10px;
+  }
+  .releaseList li > p {
+    font-size: 29px;
+  }
+  .releaseIndex {
+    margin-top: 24px;
+  }
+  .currentCopy {
+    margin: 40px 0 60px;
+  }
+  .currentCopy h2 {
+    font-size: 47px;
+  }
+  .currentCopy > p {
+    font-size: 15px;
+  }
+  .finale {
+    padding-top: 40px;
+  }
+  .finale > p {
+    font-size: clamp(40px, 10vw, 68px);
+  }
+  .finale em {
+    display: block;
+    margin: 20px 0 0 8%;
+  }
+  .finale > span {
+    margin-top: 32px;
+  }
+  /* Mobile keeps a narrow assembly margin, never a scaled desktop diagram. */
+  .diagramSticky {
+    justify-content: flex-end;
+  }
+  .diagram {
+    width: 34px;
+    height: 60svh;
+    margin-right: -20px;
+  }
+  .construction,
+  .componentLabels,
+  .systemPart text {
+    display: none;
+  }
+  .systemPart {
+    stroke-width: 4;
+  }
+  .connections {
+    stroke-width: 3;
+  }
+  .signal {
+    r: 13;
+  }
+  .signalRoute {
+    stroke-width: 3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .versionSticky {
+    position: static;
+    height: auto;
+    min-height: 0;
+  }
+  .versionReadout span {
+    display: none;
+  }
+  .versionReadout span:last-child {
+    display: block;
+    opacity: 1;
+  }
+  .releaseTraces span {
+    opacity: 1;
+  }
+  .diagramSticky {
+    position: sticky;
+  }
+  .signalRoute {
+    stroke-dasharray: none;
+  }
+}
+
+/* Small paper reserves keep the moving construction out of the reading. */
+.beyond h2,
+.humanParts dd,
+.humanParts dt,
+.rule > *,
+.sceneNote {
+  position: relative;
+  width: fit-content;
+  background: var(--background);
+}
+.humanParts dd,
+.humanParts dt {
+  padding-right: 10px;
+}
+.systemPart {
+  opacity: 0.55;
+}
+.finale > p {
+  position: relative;
+  background: var(--background);
+}
+
+.mobileDiagram {
+  display: none;
+}
+@media (max-width: 767px) {
+  .diagram {
+    display: none;
+  }
+  .mobileDiagram {
+    display: block;
+    width: 22px;
+    height: 62svh;
+    margin-right: -22px;
+    overflow: visible;
+  }
+  .mobileDiagram .systemPart,
+  .mobileDiagram .signalRoute,
+  .mobileDiagram .connections {
+    stroke-width: 1;
+  }
+  .mobileDiagram .signal {
+    r: 4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page :global(.animate-title-slide) {
+    animation: none;
+  }
+}
