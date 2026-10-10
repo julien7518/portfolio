@@ -13,14 +13,16 @@ export function CurrentBuild() {
       </div>
       <div className={styles.currentCopy}>
         <h2 id="current-title">
-          Versatile by nature.
+          <span>Versatile by nature.</span>
           <br />
-          Precise by habit.
+          <span>Precise by habit.</span>
         </h2>
         <p>
-          I learn fast, move comfortably between disciplines and care about the
-          final five percent — the part that turns something functional into
-          something considered.
+          <span>
+            I learn fast, move comfortably between disciplines and care about
+            the final five percent — the part that turns something functional
+            into something considered.
+          </span>
         </p>
       </div>
       <div className={styles.finale}>

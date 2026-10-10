@@ -56,7 +56,6 @@
   width: 100%;
   height: auto;
   display: block;
-  filter: grayscale(1);
 }
 .photo::before {
   content: "";
@@ -343,7 +342,7 @@
   letter-spacing: 0.12em;
   margin: 42px 0 20px;
 }
-.releaseList li > p {
+.releaseBody > p {
   max-width: 510px;
   font:
     clamp(25px, 2.5vw, 38px)/1.22 var(--font-heading),
@@ -357,14 +356,45 @@
   letter-spacing: 0.12em;
   color: var(--muted-foreground);
 }
+/* The release coordinates stay fixed; only the narrative converges on them. */
+.releaseList li {
+  --release-offset: 0%;
+}
+.releaseList li:nth-child(1) {
+  --release-offset: 20%;
+}
 .releaseList li:nth-child(2) {
-  padding-left: 6%;
+  --release-offset: 13%;
 }
 .releaseList li:nth-child(3) {
-  padding-left: 3%;
+  --release-offset: 6%;
 }
-.releaseList li:nth-child(n + 4) {
-  padding-left: 0;
+.releaseBody {
+  display: flow-root;
+  position: relative;
+  padding-left: var(--release-offset);
+}
+.releaseBody::before {
+  content: "";
+  position: absolute;
+  top: 51px;
+  left: 0;
+  width: calc(var(--release-offset) - 16px);
+  height: 1px;
+  background: var(--border);
+}
+.releaseBody::after {
+  content: "";
+  position: absolute;
+  top: 47px;
+  left: calc(var(--release-offset) - 9px);
+  width: 1px;
+  height: 9px;
+  background: var(--muted-foreground);
+  opacity: 0.5;
+}
+.releaseList li:nth-child(n + 4) .releaseBody::before {
+  display: none;
 }
 .current {
   padding-bottom: 40px;
@@ -574,7 +604,7 @@
   }
   .releaseList li {
     min-height: 0;
-    padding: 40px 0 46px !important;
+    padding: 40px 0 46px;
   }
   .releaseMeta span:first-child {
     font-size: 44px;
@@ -585,7 +615,7 @@
     margin-top: 28px;
     font-size: 10px;
   }
-  .releaseList li > p {
+  .releaseBody > p {
     font-size: 29px;
   }
   .releaseIndex {
@@ -695,7 +725,7 @@
   }
   .mobileDiagram {
     display: block;
-    width: 22px;
+    width: 132px;
     height: 62svh;
     margin-right: -22px;
     overflow: visible;
@@ -713,5 +743,41 @@
 @media (prefers-reduced-motion: reduce) {
   .page :global(.animate-title-slide) {
     animation: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .mobileConstruction {
+    stroke: var(--muted-foreground);
+    stroke-width: 0.7;
+    opacity: 0.18;
+  }
+  .mobileDiagram .systemPart {
+    opacity: 0.25;
+    fill: none;
+  }
+  .mobileDiagram .connections {
+    opacity: 0.25;
+  }
+}
+
+@media (max-width: 767px) {
+  .releaseBody > p > span,
+  .currentCopy h2 > span,
+  .currentCopy > p > span {
+    background: var(--background);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding-right: 4px;
+  }
+}
+
+@media (max-width: 767px) {
+  .releaseBody {
+    padding-left: 0;
+  }
+  .releaseBody::before,
+  .releaseBody::after {
+    display: none;
   }
 }

@@ -21,11 +21,7 @@ export function BeyondScreen() {
           <dt>
             <span aria-hidden>01.1 / </span>SERVICE
           </dt>
-          <dd>
-            Paris Fire Brigade
-            <br />
-            paramedic
-          </dd>
+          <dd>Paris Fire Brigade</dd>
           <dd className={styles.period}>2024 — now</dd>
           <span aria-hidden className={styles.partMark}>
             ┼
@@ -60,8 +56,8 @@ export function BeyondScreen() {
         </div>
       </dl>
       <p className={styles.humanConclusion}>
-        Different arenas, same instinct: stay calm, learn fast and pay attention
-        when details matter.
+        Different arenas, same discipline: put in the work, perform under
+        pressure and follow through.
       </p>
     </section>
   )

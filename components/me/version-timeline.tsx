@@ -5,7 +5,7 @@ const VERSIONS = [
     version: "v0.1",
     period: "Early years",
     title: "TAKING THINGS APART",
-    text: "Before I knew how to build, I wanted to understand. Remote-controlled helicopters rarely survived intact for long.",
+    text: "Before I knew how to build, I wanted to understand. Toys rarely survived intact for long.",
   },
   {
     version: "v1.0",
@@ -76,8 +76,12 @@ export function VersionTimeline() {
                 <span>{entry.version}</span>
                 <span>{entry.period}</span>
               </div>
-              <h3>{entry.title}</h3>
-              <p>{entry.text}</p>
+              <div className={styles.releaseBody}>
+                <h3>{entry.title}</h3>
+                <p>
+                  <span>{entry.text}</span>
+                </p>
+              </div>
               <span className={styles.releaseIndex} aria-hidden>
                 PART {String(index + 1).padStart(2, "0")} / 05
               </span>

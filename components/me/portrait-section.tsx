@@ -25,12 +25,12 @@ export function PortraitSection() {
             />
             <span aria-hidden className={styles.photoFrame} />
             <span aria-hidden className={styles.photoMeasure}>
-              A—A / HUMAN COMPONENT
+              A—A / HEAD COMPONENT
             </span>
           </div>
           <figcaption>
-            <span>Fig. 00 / Julien Fernandes</span>
-            <span>Not a finished object.</span>
+            <span>Fig. 00 / Julien Fernandes (me)</span>
+            <span>Human in construction.</span>
           </figcaption>
         </figure>
         <div className={styles.originCopy}>
@@ -44,15 +44,14 @@ export function PortraitSection() {
               just to understand how they worked.
             </p>
             <p>
-              Today, the objects have changed, but the instinct has not. I move
-              between software, electronics, AI and design — learning each part
-              well enough to make the whole feel clear.
+              Today, the little guy have changed, but the instinct has not. I
+              move between software, electronics, AI and design — learning each
+              part well enough to make the whole feel clear.
             </p>
           </div>
           <p className={styles.positioning}>
-            I help turn uncertain ideas into working digital products and
-            prototypes, from interface to infrastructure and sometimes beyond
-            the screen.
+            I turn uncertain ideas into working prototypes and products, from
+            interface to infrastructure and sometimes beyond the screen.
           </p>
         </div>
       </div>

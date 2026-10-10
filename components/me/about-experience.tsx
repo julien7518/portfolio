@@ -28,7 +28,9 @@ export function AboutExperience({ children }: { children: ReactNode }) {
             )
           )
           const connections = Array.from(
-            root.querySelectorAll<SVGPathElement>("[data-connection]")
+            root.querySelectorAll<SVGPathElement>(
+              mobile ? "[data-mobile-connection]" : "[data-connection]"
+            )
           )
           const chapters = Array.from(
             root.querySelectorAll<HTMLElement>("[data-version]")
@@ -48,14 +50,6 @@ export function AboutExperience({ children }: { children: ReactNode }) {
           const labels = root.querySelector("[data-part-labels]")
           if (!route || !signal) return
 
-          pieces.forEach((piece, i) =>
-            gsap.set(piece, {
-              x: mobile ? (i % 2 ? -8 : 8) : PARTS[i].dx,
-              y: mobile ? 0 : PARTS[i].dy,
-              rotation: mobile ? 0 : PARTS[i].angle,
-              svgOrigin: mobile ? "20 250" : `${PARTS[i].x} ${PARTS[i].y}`,
-            })
-          )
           gsap.set(connections, { opacity: 0.12 })
           gsap.set(labels, { opacity: 0 })
           const length = route.getTotalLength()
@@ -63,68 +57,87 @@ export function AboutExperience({ children }: { children: ReactNode }) {
           gsap.set(signal, { attr: { cx: start.x, cy: start.y } })
           const current = { progress: 0 }
 
-          // One timeline for the entire page. Positions derive from the real copy,
-          // so typography, viewport changes and reverse scrolling stay in sync.
-          const timeline = gsap.timeline({
-            paused: true,
-            defaults: { ease: "none" },
-          })
-          const rebuild = () => {
-            timeline.progress(0)
-            timeline.clear()
-            current.progress = 0
+          // Keep the scroll animation intact on refresh. Only its measured
+          // chapter thresholds change; geometry always derives from fixed homes.
+          const windows = chapters.map(() => ({ start: 0, connection: 0 }))
+          let labelsStart = 0
+          let labelsEnd = 0
+          const clamp = gsap.utils.clamp(0, 1)
+          const connectionSetters = connections.map((line) =>
+            gsap.quickSetter(line, "opacity")
+          )
+          const setLabels = gsap.quickSetter(labels, "opacity")
+          const measure = () => {
             const span = Math.max(1, root.offsetHeight - window.innerHeight)
+            const rootTop = root.getBoundingClientRect().top
             const at = (element: HTMLElement) =>
-              Math.max(
-                0,
-                Math.min(
-                  0.98,
-                  (element.getBoundingClientRect().top -
-                    root.getBoundingClientRect().top -
-                    window.innerHeight * 0.4) /
-                    span
-                )
+              clamp(
+                (element.getBoundingClientRect().top -
+                  rootTop -
+                  window.innerHeight * 0.4) /
+                  span
               )
-            const beyond = root.querySelector<HTMLElement>('[data-act="1"]')!
-            timeline.to(
-              current,
-              {
-                progress: 1,
-                duration: 1,
-                onUpdate: () => {
-                  const point = route.getPointAtLength(
-                    current.progress * length
-                  )
-                  signal.setAttribute("cx", String(point.x))
-                  signal.setAttribute("cy", String(point.y))
-                },
-              },
-              0
-            )
-            timeline.to(labels, { opacity: 1, duration: 0.04 }, at(beyond))
-            timeline.to(labels, { opacity: 0, duration: 0.05 }, at(chapters[0]))
+            labelsStart = at(root.querySelector<HTMLElement>('[data-act="1"]')!)
+            labelsEnd = at(chapters[0])
             chapters.forEach((chapter, i) => {
-              const position = at(chapter)
-              timeline.to(
-                pieces[i],
-                { x: 0, y: 0, rotation: 0, duration: 0.075 },
-                Math.max(0, position - 0.025)
-              )
-              timeline.to(
-                connections[i],
-                { opacity: 1, duration: 0.055 },
-                position
-              )
+              const position = Math.min(0.9, at(chapter))
+              windows[i] = {
+                start: Math.max(0, position - 0.025),
+                connection: position,
+              }
             })
           }
-          rebuild()
+          const render = (progress: number) => {
+            pieces.forEach((piece, i) => {
+              const remaining = 1 - clamp((progress - windows[i].start) / 0.075)
+              const x = (mobile ? (i % 2 ? -8 : 8) : PARTS[i].dx) * remaining
+              const y = (mobile ? 0 : PARTS[i].dy) * remaining
+              const angle = (mobile ? 0 : PARTS[i].angle) * remaining
+              const origin = mobile
+                ? `56 ${80 + i * 80}`
+                : `${PARTS[i].x} ${PARTS[i].y}`
+              // Native SVG transforms avoid cached origin compensation after
+              // refresh. At assembly, every part has the exact identity transform.
+              piece.setAttribute(
+                "transform",
+                `translate(${x} ${y}) rotate(${angle} ${origin})`
+              )
+              connectionSetters[i](
+                0.12 + 0.88 * clamp((progress - windows[i].connection) / 0.055)
+              )
+            })
+            setLabels(
+              clamp((progress - labelsStart) / 0.04) *
+                (1 - clamp((progress - labelsEnd) / 0.05))
+            )
+            const point = route.getPointAtLength(clamp(progress) * length)
+            signal.setAttribute("cx", String(point.x))
+            signal.setAttribute("cy", String(point.y))
+          }
+          measure()
+          render(0)
+          const animation = gsap.fromTo(
+            current,
+            { progress: 0 },
+            {
+              progress: 1,
+              duration: 1,
+              ease: "none",
+              paused: true,
+              onUpdate: () => render(current.progress),
+            }
+          )
           const trigger = ScrollTrigger.create({
             trigger: root,
             start: "top top",
             end: "bottom bottom",
-            animation: timeline,
+            animation,
             scrub: 0.4,
-            onRefreshInit: rebuild,
+            onRefresh: (self) => {
+              measure()
+              animation.progress(self.progress)
+              render(self.progress)
+            },
           })
           const releaseTriggers = chapters.map((chapter, i) =>
             ScrollTrigger.create({
@@ -148,12 +161,13 @@ export function AboutExperience({ children }: { children: ReactNode }) {
           })
           return () => {
             disposed = true
-            signal.setAttribute("cx", mobile ? "20" : "225")
+            signal.setAttribute("cx", mobile ? "108" : "225")
             signal.setAttribute("cy", mobile ? "505" : "250")
             releases.forEach((release) =>
               release.style.removeProperty("opacity")
             )
             traces.forEach((trace) => trace.style.removeProperty("opacity"))
+            pieces.forEach((piece) => piece.removeAttribute("transform"))
             trigger.kill()
             releaseTriggers.forEach((item) => item.kill())
           }

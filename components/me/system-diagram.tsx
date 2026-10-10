@@ -87,29 +87,71 @@ export function SystemDiagram() {
         </svg>
         <svg
           className={styles.mobileDiagram}
-          viewBox="0 0 40 540"
+          viewBox="0 0 132 540"
           fill="none"
           preserveAspectRatio="none"
         >
           <path
             data-mobile-route
-            d="M20 15V505"
+            d="M108 15V505"
             className={styles.signalRoute}
           />
+          <g className={styles.mobileConstruction}>
+            <path
+              d="M8 80H124M8 240H124M8 400H124M56 30V480"
+              strokeDasharray="2 6"
+            />
+            <path d="M12 35h16m-8-8v16M8 465h16m-8-8v16M108 30v460m-5-460h10m-10 460h10" />
+            <path d="M16 100L96 380" strokeDasharray="1 7" />
+          </g>
           {[80, 160, 240, 320, 400].map((y, i) => (
-            <g key={y} data-mobile-part={i} className={styles.systemPart}>
-              <path d={`M20 ${y - 14}v28`} />
-              <rect x="14" y={y - 6} width="12" height="12" />
+            <g key={y}>
+              <path
+                data-mobile-connection={i}
+                d={`M108 ${y}H56`}
+                className={styles.connections}
+              />
+              <g data-mobile-part={i} className={styles.systemPart}>
+                {i === 0 ? (
+                  <>
+                    <path d={`M24 ${y + 28}v-56h64v40m-16 16H24`} />
+                    <circle cx="56" cy={y} r="19" />
+                  </>
+                ) : i === 1 ? (
+                  <>
+                    <rect x="22" y={y - 23} width="68" height="46" />
+                    <path d={`M34 ${y - 10}h42m-42 10h26m-26 10h34`} />
+                  </>
+                ) : i === 2 ? (
+                  <>
+                    <circle cx="56" cy={y} r="32" />
+                    <circle cx="56" cy={y} r="17" />
+                    <path d={`M16 ${y}h16m48 0h16M56 ${y - 40}v16m0 48v16`} />
+                  </>
+                ) : i === 3 ? (
+                  <>
+                    <path d={`M28 ${y - 28}h56v56H28zm12 12h32v32H40z`} />
+                    <path d={`M20 ${y - 20}h8m56 0h8m-72 40h8m56 0h8`} />
+                  </>
+                ) : (
+                  <>
+                    <path
+                      d={`M28 ${y + 28}v-56h56v42m-14 14H28M40 ${y}h32m-16-16v32`}
+                    />
+                    <circle cx="84" cy={y + 28} r="4" />
+                  </>
+                )}
+              </g>
             </g>
           ))}
           <path
-            d="M20 420v85"
+            d="M108 420v85"
             className={styles.connections}
             strokeDasharray="2 6"
           />
           <circle
             data-mobile-signal
-            cx="20"
+            cx="108"
             cy="505"
             r="4"
             className={styles.signal}
