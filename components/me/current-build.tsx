@@ -29,7 +29,10 @@ export function CurrentBuild() {
         <p>
           Still taking things apart.
           <br />
-          <em>Just building better things now.</em>
+          <em>
+            Just building better things now
+            <span className="text-primary">.</span>
+          </em>
         </p>
         <span className={styles.micro}>Assembly continues.</span>
       </div>

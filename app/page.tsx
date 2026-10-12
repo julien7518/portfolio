@@ -6,11 +6,13 @@ import { SelectedWork } from "@/components/home/selected-work"
 import { Contact } from "@/components/home/contact"
 import { ProjectPreviewProvider } from "@/components/projects/preview"
 import { seo } from "@/resources"
+import { createPageMetadata } from "@/lib/metadata"
 import { allProjects, selectedProjects, toIndexRow } from "./projects/project"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   description: seo.description,
-}
+  path: "/",
+})
 
 export default function Page() {
   const featured = selectedProjects

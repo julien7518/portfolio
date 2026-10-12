@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { createPageMetadata } from "@/lib/metadata"
 
 import { AnimatedTitle } from "@/components/ui/animated-title"
 import {
@@ -13,11 +14,12 @@ import {
   toIndexRow,
 } from "./project"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Projects",
   description:
     "Selected work, client portfolios and side projects — invoicing, WebGPU, on-device AI and hardware.",
-}
+  path: "/projects",
+})
 
 export default function Projects() {
   const groups: ProjectGroup[] = [

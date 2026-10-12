@@ -143,7 +143,9 @@ export function IndexRow({
             Source
             <MoveRight aria-hidden className="size-3" />
           </a>
-        ) : null}
+        ) : (
+          <span className="ml-auto"></span>
+        )}
       </div>
     </div>
   )
