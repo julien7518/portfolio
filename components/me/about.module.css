@@ -702,7 +702,6 @@
 .sceneNote {
   position: relative;
   width: fit-content;
-  background: var(--background);
 }
 .humanParts dd,
 .humanParts dt {
@@ -769,6 +768,9 @@
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
     padding-right: 4px;
+  }
+  .finale > p {
+    background: transparent;
   }
 }
 

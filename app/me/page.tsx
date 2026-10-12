@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { createPageMetadata } from "@/lib/metadata"
 import { AnimatedTitle } from "@/components/ui/animated-title"
 import { AboutExperience } from "@/components/me/about-experience"
 import { PortraitSection } from "@/components/me/portrait-section"
@@ -8,11 +9,12 @@ import { CurrentBuild } from "@/components/me/current-build"
 import { getAge } from "@/lib/utils"
 import styles from "@/components/me/about.module.css"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Who I am",
   description:
     "Take apart, understand, rebuild. The experiences shaping Julien Fernandes’ work across software, electronics, AI and design.",
-}
+  path: "/me",
+})
 
 export default function Me() {
   return (

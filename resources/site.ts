@@ -7,7 +7,9 @@
  * client-only APIs — it is read from both server and client components.
  */
 
-const rawUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+/** Public domain for every canonical and social URL; can also be overridden at deployment. */
+const rawUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://julien-fernandes.vercel.app"
 
 export const identity = {
   /** Full name, used in the footer, meta tags and document title. */
@@ -81,6 +83,7 @@ export const social: readonly SocialLink[] = [
 
 export const seo = {
   url: rawUrl,
+  title: `${identity.name} | ${identity.role}`,
   description:
     "Creative technologist in Paris, France. Web interfaces, native apps, embedded firmware and trained models.",
   keywords: [

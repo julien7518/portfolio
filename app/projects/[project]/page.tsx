@@ -14,6 +14,7 @@ import { GitHub } from "@/components/logos"
 import { allProjects, type ProjectType } from "../project"
 import { slugify } from "@/lib/utils"
 import { identity } from "@/resources"
+import { createPageMetadata } from "@/lib/metadata"
 
 const total = allProjects.length
 
@@ -41,22 +42,17 @@ export async function generateMetadata({
   const { project: slug } = await params
   const project = allProjects.find((item) => slugify(item.name) === slug)
 
-  if (!project) return {}
+  if (!project) notFound()
 
   const description =
     project.description ??
     `${project.name} — ${project.subtitle ?? "a project"} by ${identity.name}.`
 
-  return {
+  return createPageMetadata({
     title: project.name,
     description,
-    openGraph: {
-      title: `${project.name} — ${identity.name}`,
-      description,
-      type: "article",
-      images: project.imageSrc ? [{ url: project.imageSrc }] : undefined,
-    },
-  }
+    path: `/projects/${slug}`,
+  })
 }
 
 export default async function ProjectPage({

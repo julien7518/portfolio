@@ -9,6 +9,7 @@ import { Cursor } from "@/components/cursor"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { identity, seo } from "@/resources"
+import { createPageMetadata } from "@/lib/metadata"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -29,20 +30,15 @@ const instrumentSerifHeading = Instrument_Serif({
 })
 
 export const metadata: Metadata = {
+  ...createPageMetadata({ description: seo.description, path: "/" }),
   metadataBase: new URL(seo.url),
   title: {
-    default: identity.name,
+    default: seo.title,
     template: `%s | ${identity.name}`,
   },
-  description: identity.tagline,
   keywords: [...seo.keywords],
   authors: [{ name: identity.name }],
-  openGraph: {
-    title: identity.name,
-    description: identity.tagline,
-    type: "website",
-    locale: seo.locale,
-  },
+  creator: identity.name,
 }
 
 export default function RootLayout({
