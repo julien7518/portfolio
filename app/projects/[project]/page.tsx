@@ -104,8 +104,8 @@ export default async function ProjectPage({
         />
 
         <div className="grid gap-12 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-10 lg:gap-20">
-          <aside className="md:sticky md:top-24 md:self-start">
-            <dl className="space-y-6 font-mono text-xs">
+          <aside className="order-2 border-t border-border pt-8 md:order-1 md:sticky md:top-24 md:self-start md:border-0 md:pt-0">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-8 font-mono text-xs md:block md:space-y-6">
               <div>
                 <dt className="tracking-widest text-muted-foreground uppercase">
                   Year
@@ -127,7 +127,7 @@ export default async function ProjectPage({
                   <dt className="tracking-widest text-muted-foreground uppercase">
                     Stack
                   </dt>
-                  <dd className="mt-1 space-y-1">
+                  <dd className="mt-2 flex flex-wrap gap-x-3 gap-y-1 md:mt-1 md:block md:space-y-1">
                     {project.stack.map((item) => (
                       <span key={item} className="block">
                         {item}
@@ -142,7 +142,7 @@ export default async function ProjectPage({
                   <dt className="tracking-widest text-muted-foreground uppercase">
                     Fields
                   </dt>
-                  <dd className="mt-1 space-y-1">
+                  <dd className="mt-2 flex flex-wrap gap-x-3 gap-y-1 md:mt-1 md:block md:space-y-1">
                     {project.categories.map((item) => (
                       <span key={item} className="block">
                         {item}
@@ -153,7 +153,7 @@ export default async function ProjectPage({
               ) : null}
 
               {project.live || project.github ? (
-                <div className="space-y-3 space-x-3 border-t border-border pt-6">
+                <div className="col-span-2 flex flex-wrap gap-3 border-t border-border pt-6 md:block md:space-y-3 md:space-x-3">
                   {project.live ? (
                     <LinkButton
                       labelFull="Visit live"
@@ -179,7 +179,7 @@ export default async function ProjectPage({
             </dl>
           </aside>
 
-          <article className="min-w-0">
+          <article className="order-1 min-w-0 md:order-2">
             {project.description ? (
               <Reveal>
                 <p className="font-heading text-3xl leading-tight text-balance italic md:text-5xl">
@@ -187,6 +187,13 @@ export default async function ProjectPage({
                 </p>
               </Reveal>
             ) : null}
+
+            <Gallery
+              images={frames}
+              alts={alts}
+              name={project.name}
+              className={project.description ? "mt-6 md:mt-10" : ""}
+            />
 
             {paragraphs.length ? (
               <Reveal className="mt-10">
@@ -214,13 +221,6 @@ export default async function ProjectPage({
                 </div>
               </Reveal>
             ) : null}
-
-            <Gallery
-              images={frames}
-              alts={alts}
-              name={project.name}
-              className="mt-16 md:mt-24"
-            />
           </article>
         </div>
 
