@@ -168,6 +168,11 @@
   animation-name: title-slide-right;
 }
 
+.specific-word {
+  color: var(--primary);
+  font-style: italic;
+}
+
 @keyframes scroll-reveal {
   0% {
     opacity: 0;

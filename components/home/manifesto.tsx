@@ -36,12 +36,12 @@ const DISCIPLINES: readonly Discipline[] = [
   { id: "hardware", word: "hardware", place: "right-[1%] bottom-[11%]" },
   {
     id: "intelligence",
-    word: "intelligence",
+    word: "AI",
     place: "left-[4%] bottom-[9%]",
   },
 ]
 
-const OPENING = "I build where disciplines overlap —"
+const OPENING = "I build where disciplines overlap,"
 const BRIDGE = "The best technology does not ask to be understood."
 /** The last word of the closing line — the one that does not survive it. */
 const TAIL = "disappears."
