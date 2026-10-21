@@ -55,7 +55,7 @@ export function toIndexRow(project: ProjectType): IndexRowProject {
 export const selectedProjects: ProjectType[] = [
   {
     name: "Quinvo",
-    subtitle: "Simplified invoicing for French entrepreneurs",
+    subtitle: "Simplified invoicing interface for French entrepreneurs",
     description:
       "An invoicing dashboard for freelancers: clients, invoice statuses, and the revenue you still have to declare.",
     date: "Feb 2026",
@@ -119,7 +119,7 @@ export const selectedProjects: ProjectType[] = [
     github: "https://github.com/julien7518/kaumite",
     categories: ["Swift"],
     imageAlt: "Terminal interface of kaumite",
-    // no frames to preview, so it stays on the projects page only
+    gallery: ["/kaumite/commands.png", "/kaumite/example.png"],
   },
   {
     name: "ShaderLab",

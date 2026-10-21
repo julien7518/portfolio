@@ -24,7 +24,7 @@ export const metadata: Metadata = createPageMetadata({
 export default function Projects() {
   const groups: ProjectGroup[] = [
     { label: "Selected work", projects: selectedProjects.map(toIndexRow) },
-    { label: "Portfolios", projects: portfolioProjects.map(toIndexRow) },
+    { label: "Client Portfolios", projects: portfolioProjects.map(toIndexRow) },
     { label: "Other little things", projects: littleProjects.map(toIndexRow) },
   ]
 

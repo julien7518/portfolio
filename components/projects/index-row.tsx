@@ -97,7 +97,7 @@ export function IndexRow({
           </h3>
 
           {project.subtitle ? (
-            <p className="mt-2 max-w-prose text-sm text-muted-foreground transition-colors duration-200 group-focus-within/row:text-background/70 group-hover/row:text-background/70 md:text-base">
+            <p className="mt-2 max-w-prose text-base text-muted-foreground transition-colors duration-200 group-focus-within/row:text-background/70 group-hover/row:text-background/70 md:text-lg">
               {project.subtitle}
             </p>
           ) : null}

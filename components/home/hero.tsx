@@ -3,9 +3,8 @@
 import { useRef } from "react"
 import { useGSAP } from "@gsap/react"
 
-import { ParisClock } from "@/components/paris-clock"
 import { gsap } from "@/lib/gsap"
-import { identity, location } from "@/resources"
+import { identity } from "@/resources"
 import { HeroGrid } from "./hero-grid"
 
 export function Hero() {
@@ -47,15 +46,6 @@ export function Hero() {
     >
       <HeroGrid />
 
-      <div className="relative z-10 flex items-baseline justify-between gap-6 border-b border-border pb-4 font-mono text-xs text-muted-foreground">
-        <div data-hero-line className="tracking-widest uppercase">
-          {location.label}
-        </div>
-        <div data-hero-line className="tabular-nums">
-          <ParisClock />
-        </div>
-      </div>
-
       <div className="relative z-10 flex flex-1 flex-col justify-center py-16 md:py-24">
         {/* The reveal masks need room for descenders (the J especially), so
             each line carries bottom padding and hands it straight back with a
@@ -75,10 +65,10 @@ export function Hero() {
       </div>
 
       <div className="relative z-10 flex flex-col gap-8 border-t border-border pt-6 md:flex-row md:items-end md:justify-between">
-        <div className="max-w-sm">
+        <div className="max-w-xl">
           <p
             data-hero-line
-            className="font-mono text-[0.6875rem] tracking-widest uppercase"
+            className="font-mono text-base leading-tight tracking-wide uppercase md:text-lg"
           >
             {identity.role}
           </p>
@@ -86,8 +76,10 @@ export function Hero() {
             data-hero-line
             className="mt-3 text-base leading-relaxed text-balance text-muted-foreground md:text-lg"
           >
-            Across web, native, embedded and AI, I turn complex systems into
-            experiences that feel clear, tactile and alive.
+            Across <span className="specific-word">web</span>, native, embedded
+            and <span className="specific-word">AI</span>, I turn complex
+            systems into <span className="specific-word">experiences</span> that
+            feel clear, tactile and alive.
           </p>
         </div>
       </div>
