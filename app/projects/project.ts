@@ -55,7 +55,7 @@ export function toIndexRow(project: ProjectType): IndexRowProject {
 export const selectedProjects: ProjectType[] = [
   {
     name: "Quinvo",
-    subtitle: "Simplified invoicing for French entrepreneurs",
+    subtitle: "Simplified invoicing interface for French entrepreneurs",
     description:
       "An invoicing dashboard for freelancers: clients, invoice statuses, and the revenue you still have to declare.",
     date: "Feb 2026",
