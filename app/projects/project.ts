@@ -119,7 +119,7 @@ export const selectedProjects: ProjectType[] = [
     github: "https://github.com/julien7518/kaumite",
     categories: ["Swift"],
     imageAlt: "Terminal interface of kaumite",
-    // no frames to preview, so it stays on the projects page only
+    gallery: ["/kaumite/commands.png", "/kaumite/example.png"],
   },
   {
     name: "ShaderLab",

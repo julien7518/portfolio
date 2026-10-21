@@ -150,6 +150,8 @@ export function Gallery({
           "relative flex snap-x snap-proximity gap-4 overflow-x-auto py-6 select-none",
           "scrollbar-none [&::-webkit-scrollbar]:hidden",
           "md:gap-8 md:py-8",
+          // Leave room for the active outline at both scroll boundaries.
+          !single && "-mx-2 px-2",
           single && "justify-center"
         )}
       >

@@ -68,6 +68,8 @@ const SETTLED_OFFSET = 0.12
 const SETTLED_VELOCITY = 0.4
 
 const MAX_POINTER_SPEED = 1600
+/** Base pace of the organic drift, rather than a repeating loop. */
+const AUTO_PERIOD = 2
 
 const REST_VARIABLE = "--muted-foreground"
 const REST_ALPHA = 0.28
@@ -105,7 +107,10 @@ export function HeroGrid() {
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
     const pointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)")
-    const interactive = !motionQuery.matches && pointerQuery.matches
+    const isAutomatic = () => !motionQuery.matches && !pointerQuery.matches
+    let automaticPhase = 0
+    const driftPhaseX = Math.random() * Math.PI * 2
+    const driftPhaseY = Math.random() * Math.PI * 2
 
     let width = 0
     let height = 0
@@ -118,7 +123,7 @@ export function HeroGrid() {
 
     let frame = 0
     let last = 0
-    let pageVisible = true
+    let pageVisible = document.visibilityState === "visible"
     let heroVisible = true
     let tracking = false
 
@@ -459,10 +464,39 @@ export function HeroGrid() {
       const delta = Math.min((now - last) / 1000, 1 / 30)
       last = now
 
-      const dragDecay = Math.exp(-DRAG_DECAY * delta)
+      if (isAutomatic()) {
+        const speed = (Math.PI * 2) / AUTO_PERIOD
+        automaticPhase += delta * speed
+        const t = automaticPhase
+        const radiusX = width * 0.32
+        const radiusY = height * 0.16
 
-      pointer.vx *= dragDecay
-      pointer.vy *= dragDecay
+        // Unequal frequencies and random phases produce a smooth wandering
+        // path, with natural changes of speed instead of a recognisable loop.
+        const x =
+          Math.sin(t * 0.73 + driftPhaseX) * 0.7 +
+          Math.sin(t * 0.31 + driftPhaseY) * 0.3
+        const y =
+          Math.sin(t * 0.53 + driftPhaseY) * 0.7 +
+          Math.sin(t * 0.97 + driftPhaseX) * 0.3
+
+        // Keep the drift inside the visible portion of the gradient mask.
+        movePointer(width * 0.5 + x * radiusX, height * 0.42 + y * radiusY)
+        pointer.vx =
+          (Math.cos(t * 0.73 + driftPhaseX) * 0.7 * 0.73 +
+            Math.cos(t * 0.31 + driftPhaseY) * 0.3 * 0.31) *
+          radiusX *
+          speed
+        pointer.vy =
+          (Math.cos(t * 0.53 + driftPhaseY) * 0.7 * 0.53 +
+            Math.cos(t * 0.97 + driftPhaseX) * 0.3 * 0.97) *
+          radiusY *
+          speed
+      } else {
+        const dragDecay = Math.exp(-DRAG_DECAY * delta)
+        pointer.vx *= dragDecay
+        pointer.vy *= dragDecay
+      }
 
       step(delta)
       paint()
@@ -471,7 +505,7 @@ export function HeroGrid() {
     }
 
     const start = () => {
-      if (frame) return
+      if (frame || motionQuery.matches || !pageVisible || !heroVisible) return
 
       last = performance.now()
       frame = requestAnimationFrame(tick)
@@ -530,6 +564,11 @@ export function HeroGrid() {
       previousY = y
       previousAt = at
 
+      movePointer(x, y)
+      start()
+    }
+
+    const movePointer = (x: number, y: number) => {
       pointer.x = x
       pointer.y = y
 
@@ -554,8 +593,6 @@ export function HeroGrid() {
       for (let r = row - reach; r <= row + reach; r++) {
         for (let c = column - reach; c <= column + reach; c++) occupy(c, r)
       }
-
-      start()
     }
 
     const onPointerLeave = () => {
@@ -579,27 +616,45 @@ export function HeroGrid() {
       resetPool()
       buildPattern()
       paint()
+      if (isAutomatic()) start()
+    }
+
+    const syncPlayback = () => {
+      if (pageVisible && heroVisible && !motionQuery.matches) {
+        if (tracking || isAutomatic()) start()
+      } else if (frame) {
+        cancelAnimationFrame(frame)
+        frame = 0
+      }
     }
 
     const onVisibilityChange = () => {
       pageVisible = document.visibilityState === "visible"
-      if (pageVisible && tracking) start()
+      syncPlayback()
     }
 
     // Honour a mid-session change of preference, such as reduced motion being
     // switched on in the OS while the page is open.
     const onPreferenceChange = () => {
-      if (motionQuery.matches || !pointerQuery.matches) {
-        if (frame) cancelAnimationFrame(frame)
-        frame = 0
-        tracking = false
-        resetPool()
-        paint()
-        return
-      }
+      host.removeEventListener("pointermove", onPointerMove)
+      host.removeEventListener("pointerleave", onPointerLeave)
+      if (frame) cancelAnimationFrame(frame)
+      frame = 0
+      tracking = false
+      previousAt = 0
+      pointer.vx = 0
+      pointer.vy = 0
+      resetPool()
+      paint()
 
-      host.addEventListener("pointermove", onPointerMove, { passive: true })
-      host.addEventListener("pointerleave", onPointerLeave, { passive: true })
+      if (motionQuery.matches) return
+
+      if (pointerQuery.matches) {
+        host.addEventListener("pointermove", onPointerMove, { passive: true })
+        host.addEventListener("pointerleave", onPointerLeave, { passive: true })
+      } else {
+        start()
+      }
     }
 
     const resizeObserver = new ResizeObserver(resize)
@@ -608,7 +663,7 @@ export function HeroGrid() {
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
         heroVisible = entry.isIntersecting
-        if (heroVisible && tracking && pageVisible) start()
+        syncPlayback()
       },
       { threshold: 0 }
     )
@@ -630,12 +685,8 @@ export function HeroGrid() {
     motionQuery.addEventListener("change", onPreferenceChange)
     pointerQuery.addEventListener("change", onPreferenceChange)
 
-    if (interactive) {
-      host.addEventListener("pointermove", onPointerMove, { passive: true })
-      host.addEventListener("pointerleave", onPointerLeave, { passive: true })
-    }
-
     resize()
+    onPreferenceChange()
 
     return () => {
       if (frame) cancelAnimationFrame(frame)
