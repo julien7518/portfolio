@@ -13,7 +13,7 @@ import { DisciplineModule, type DisciplineId } from "./manifesto-modules"
  * The sentence arrives incomplete: the opening clause set in editorial type,
  * and four hairline slots where the disciplines belong. The disciplines
  * themselves lie loose around the viewport as physical modules — a window, a
- * listing, a board, a signal. Scrolling pulls each one into its slot in
+ * listing, a board, a signal. The entrance animation pulls each into its slot in
  * reading order, where it collapses and hands over its word; once the thought
  * is whole it is distilled away, left to right, until only "It simply" is
  * left standing — and that gives up its last word to the dust it was always
@@ -144,19 +144,7 @@ const ACT = {
   disperse: [0.93, 1],
 } as const
 
-/**
- * Where the closing beat begins, as a fraction of the scroll — and the only
- * number that decides how long the ending lasts.
- *
- * It trades against the scene's height in the markup. Everything above it is
- * squeezed by `pack` to make room, so raising one without the other takes the
- * difference out of the beginning instead. The two are set together so that
- * the assembly keeps exactly the scroll distance it had and the ending gets
- * twice as much: 300svh of travel, the last 27% of it the closing beat.
- *
- * Tuning that from sixteen positions by hand every time is how timings drift
- * out of step with each other, so it is done once here instead.
- */
+/** The closing beat keeps its share of the normalized choreography. */
 const CLOSE = 0.7316
 
 export function Manifesto() {
@@ -332,17 +320,7 @@ export function Manifesto() {
 
         const timeline = gsap.timeline({
           defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: scroller,
-            start: "top top",
-            end: "bottom bottom",
-            // Scrubbed straight off the scroll: Lenis feeds ScrollTrigger on
-            // every frame, so the scene is driven, never hijacked.
-            scrub: true,
-            // Destinations are measured from the DOM, so they have to be
-            // measured again whenever that DOM changes shape.
-            invalidateOnRefresh: true,
-          },
+          paused: true,
         })
 
         // 1. Entrance — the first clause settles into place, still missing four
@@ -744,10 +722,195 @@ export function Manifesto() {
         // exactly 1 and the positions above are the scroll percentages.
         timeline.to({}, { duration: 1 }, 0)
 
-        // Slot positions depend on the typeface. Self-hosted fonts swap in
-        // after hydration, so give ScrollTrigger one more look once they land.
-        document.fonts?.ready.then(() => ScrollTrigger.refresh())
+        // Stop between completed visual states, with room for pixel rounding.
+        const assemblyEnd = Math.max(
+          beat.bridge[1],
+          ...beat.resolve.map(([land, shut]) => land + (shut - land) * 2)
+        )
+        const readingStop = (assemblyEnd + beat.distill) / 2
+        const closingStop = (beat.finale[1] + beat.disperse[0]) / 2
+
+        // Short cosine ramps around a steady cruise: no sudden velocity jump
+        // and no large acceleration peak through the cards' flights.
+        const cruise = (progress: number): number => {
+          const ramp = 0.16
+          if (progress > 1 - ramp) return 1 - cruise(1 - progress)
+          if (progress < ramp) {
+            return (
+              (progress -
+                (ramp / Math.PI) * Math.sin((Math.PI * progress) / ramp)) /
+              (2 * (1 - ramp))
+            )
+          }
+          return (progress - ramp / 2) / (1 - ramp)
+        }
+
+        // The scroll position drives the scene, including during automatic travel.
+        // An upward gesture cancels automation and immediately returns native control.
+        let phase:
+          | "idle"
+          | "assembling"
+          | "reading"
+          | "closing"
+          | "exiting"
+          | "manual"
+          | "done" = "idle"
+        let lastGesture = 0
+        let touchY = 0
+        let playback: gsap.core.Tween | undefined
+        let hold: gsap.core.Tween | undefined
+        const cancel = () => {
+          playback?.kill()
+          hold?.kill()
+          phase = "manual"
+        }
+        const scrollTo = (
+          target: () => number,
+          duration: number,
+          onComplete: () => void,
+          ease: string | ((progress: number) => number) = "sine.inOut"
+        ) => {
+          const position = { y: window.scrollY }
+          playback = gsap.to(position, {
+            y: target,
+            duration,
+            ease,
+            onUpdate: () => {
+              window.scrollTo({ top: position.y, behavior: "instant" })
+              ScrollTrigger.update()
+            },
+            onComplete,
+          })
+        }
+        const scenePosition = (progress: number) =>
+          trigger.start + (trigger.end - trigger.start) * progress
+        const exit = () => {
+          phase = "exiting"
+          const target = document.getElementById("selected-work")
+          if (!target) {
+            phase = "done"
+            return
+          }
+          // The remaining scroll also plays the word's dispersal.
+          scrollTo(
+            () => target.getBoundingClientRect().top + window.scrollY,
+            2,
+            () => {
+              phase = "done"
+            }
+          )
+        }
+        const close = () => {
+          phase = "closing"
+          scrollTo(
+            () => scenePosition(closingStop),
+            2.2,
+            () => {
+              hold = gsap.delayedCall(0.5, exit)
+            },
+            // Zero velocity and acceleration at the stop, so the reading
+            // pause continues the movement's deceleration without a jerk.
+            (progress) =>
+              progress ** 3 * (progress * (progress * 6 - 15) + 10)
+          )
+        }
+        const gesture = (event: Event, direction: number) => {
+          if (["idle", "manual", "done"].includes(phase)) return
+          if (direction < 0) {
+            cancel()
+            return
+          }
+          if (direction === 0) return
+          event.preventDefault()
+          const now = performance.now()
+          // A trackpad's momentum belongs to the gesture that started it.
+          const fresh = now - lastGesture > 180
+          lastGesture = now
+          if (phase === "reading" && fresh) close()
+        }
+        const wheel = (event: WheelEvent) => {
+          if (!event.ctrlKey && event.deltaY) gesture(event, event.deltaY)
+        }
+        const touchStart = (event: TouchEvent) => {
+          touchY = event.touches[0]?.clientY ?? 0
+        }
+        const touchMove = (event: TouchEvent) => {
+          const y = event.touches[0]?.clientY ?? touchY
+          gesture(event, touchY - y)
+          touchY = y
+        }
+        const key = (event: KeyboardEvent) => {
+          if (
+            (event.target as HTMLElement)?.closest(
+              "a, button, input, textarea, select, [contenteditable]"
+            )
+          )
+            return
+          if (["ArrowDown", "PageDown", " ", "End"].includes(event.key))
+            gesture(event, event.shiftKey ? -1 : 1)
+          if (["ArrowUp", "PageUp", "Home"].includes(event.key))
+            gesture(event, -1)
+        }
+        const trigger = ScrollTrigger.create({
+          trigger: scroller,
+          start: "top top",
+          end: "bottom bottom",
+          onUpdate: (self) => timeline.progress(self.progress),
+          onRefresh: (self) => timeline.invalidate().progress(self.progress),
+          onLeaveBack: cancel,
+        })
+        // Catch the approach while it is entering the viewport, rather than
+        // waiting for the user to drag its heading all the way to the top.
+        ScrollTrigger.create({
+          trigger: scroller,
+          start: "top 30%",
+          end: "bottom bottom",
+          onLeaveBack: () => {
+            cancel()
+            phase = "idle"
+          },
+          onEnter: () => {
+            if (phase !== "idle") return
+            phase = "assembling"
+            lastGesture = performance.now()
+            scrollTo(
+              () => scenePosition(0.12 * pack),
+              0.55,
+              () => {
+                scrollTo(
+                  () => scenePosition(readingStop),
+                  4,
+                  () => {
+                    phase = "reading"
+                    lastGesture = performance.now()
+                  },
+                  cruise
+                )
+              },
+              "power2.out"
+            )
+          },
+        })
+        window.addEventListener("wheel", wheel, { passive: false })
+        window.addEventListener("touchstart", touchStart, { passive: true })
+        window.addEventListener("touchmove", touchMove, { passive: false })
+        window.addEventListener("keydown", key)
+
+        let disposed = false
+        document.fonts?.ready.then(() => {
+          if (!disposed) ScrollTrigger.refresh()
+        })
+        return () => {
+          disposed = true
+          playback?.kill()
+          hold?.kill()
+          window.removeEventListener("wheel", wheel)
+          window.removeEventListener("touchstart", touchStart)
+          window.removeEventListener("touchmove", touchMove)
+          window.removeEventListener("keydown", key)
+        }
       })
+      return () => motion.revert()
     },
     { scope: rootRef }
   )
@@ -758,9 +921,7 @@ export function Manifesto() {
       aria-label="Approach"
       className="relative pb-16 md:pb-24"
     >
-      {/* The scroll area. svh throughout so the sticky stage travels exactly
-          as far as the timeline it drives — and gone entirely when the scene
-          is not wanted, which is what reduced motion gets. */}
+      {/* Native scroll drives the sticky scene, manually or automatically. */}
       <div
         data-scene
         className="relative h-[400svh] motion-reduce:h-auto motion-reduce:pt-24 md:motion-reduce:pt-32"

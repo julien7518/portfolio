@@ -11,7 +11,7 @@ export function SelectedWork({
   total: number
 }) {
   return (
-    <section className="px-6 pb-28 md:pb-40">
+    <section id="selected-work" className="px-6 pb-28 md:pb-40">
       <div className="flex items-baseline justify-between gap-6 border-b border-border pb-4">
         <h2 className="font-heading text-5xl italic md:text-8xl">
           Selected work
