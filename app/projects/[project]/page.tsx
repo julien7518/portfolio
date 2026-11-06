@@ -104,7 +104,7 @@ export default async function ProjectPage({
         />
 
         <div className="grid gap-12 md:grid-cols-[13rem_minmax(0,1fr)] md:gap-10 lg:gap-20">
-          <aside className="order-2 border-t border-border pt-8 md:order-1 md:sticky md:top-24 md:self-start md:border-0 md:pt-0">
+          <aside className="order-2 border-t border-border pt-8 md:sticky md:top-24 md:order-1 md:self-start md:border-0 md:pt-0">
             <dl className="grid grid-cols-2 gap-x-6 gap-y-8 font-mono text-xs md:block md:space-y-6">
               <div>
                 <dt className="tracking-widest text-muted-foreground uppercase">
@@ -190,6 +190,7 @@ export default async function ProjectPage({
 
             <Gallery
               images={frames}
+              videos={project.videos}
               alts={alts}
               name={project.name}
               className={project.description ? "mt-6 md:mt-10" : ""}

@@ -30,6 +30,7 @@ export interface ProjectType {
   imageAlt?: string
   gallery?: string[]
   galleryAlts?: string[]
+  videos?: { src: string; title: string; poster?: string }[]
   /** Surfaced on the homepage. Kept to a handful, so it stays a choice. */
   featured?: boolean
 }
@@ -53,6 +54,65 @@ export function toIndexRow(project: ProjectType): IndexRowProject {
 }
 
 export const selectedProjects: ProjectType[] = [
+  {
+    name: "Between Threads",
+    subtitle: "Hand gestures brought to life through a motor-controlled puppet",
+    description:
+      "An interactive system that translates finger movements into physical motion, connecting computer vision and servo motors.",
+    date: "2025",
+    role: "Group project — creative technology",
+    stack: [
+      "Python",
+      "MediaPipe",
+      "FastAPI",
+      "Next.js",
+      "Unity",
+      "Raspberry Pi",
+      "UDP",
+      "WebSockets",
+    ],
+    long_description: [
+      "Between Threads explores a modern puppet system in which hand movements become a physical control interface. A hand-tracking pipeline follows the fingers and sends their movements to servo motors, turning gestures captured by a camera into live mechanical motion.",
+      "The system is split into independent services: hand recognition, motor control on a Raspberry Pi, a web dashboard, a Unity interface and live video streaming. UDP and WebSockets connect the modules, while the hardware repository brings together the wiring and printed parts. The project connects computer vision, real-time communication and physical fabrication in one interactive installation.",
+    ],
+    github: "https://github.com/Between-Threads-Project",
+    categories: ["Python", "Hardware", "React", "Next.js"],
+    featured: true,
+    imageAlt: "Between Threads interactive puppet installation",
+    imageSrc: "/between-threads/puppet.jpg",
+    gallery: [
+      "/between-threads/puppet.jpg",
+      "/between-threads/puppet-drawing.jpg",
+      "/between-threads/hardware.jpg",
+      "/between-threads/first-test.jpg",
+      "/between-threads/unity-interface.jpg",
+      "/between-threads/live-streaming.jpg",
+      "/between-threads/external-display-test.jpg",
+      "/between-threads/user-test.jpg",
+    ],
+    galleryAlts: [
+      "The puppet",
+      "Puppet design drawing",
+      "Hardware setup",
+      "First prototype test",
+      "Unity interface",
+      "Live video streaming",
+      "External display test",
+      "User testing",
+    ],
+    videos: [
+      {
+        src: "/between-threads/demo.mp4",
+        title: "Project demonstration",
+        poster: "/between-threads/puppet.jpg",
+      },
+      {
+        src: "/between-threads/user-test.mp4",
+        title: "User testing",
+        poster: "/between-threads/user-test.jpg",
+      },
+    ],
+  },
   {
     name: "Quinvo",
     subtitle: "Simplified invoicing interface for French entrepreneurs",
@@ -104,6 +164,7 @@ export const selectedProjects: ProjectType[] = [
   },
   {
     name: "kaumite",
+    featured: true,
     subtitle:
       "Generate Git commit messages locally with Apple Foundation Models",
     description:
@@ -121,6 +182,9 @@ export const selectedProjects: ProjectType[] = [
     imageAlt: "Terminal interface of kaumite",
     gallery: ["/kaumite/commands.png", "/kaumite/example.png"],
   },
+]
+
+export const projects: ProjectType[] = [
   {
     name: "ShaderLab",
     subtitle: "A real-time 3D editor using WebGPU",
@@ -137,7 +201,6 @@ export const selectedProjects: ProjectType[] = [
     github: "https://github.com/julien7518/shaderlab",
     live: "https://webgpu-shaderlab.vercel.app",
     categories: ["3D", "WebGPU"],
-    featured: true,
     imageSrc: "/shaderlab/shaderlab.png",
     imageAlt: "ShaderLab editor with the live shader preview",
     gallery: ["/shaderlab/shaderlab.png"],
@@ -165,7 +228,6 @@ export const selectedProjects: ProjectType[] = [
     live: "https://paperlm.vercel.app",
     github: "https://github.com/julien7518/paperlm",
     categories: ["AI", "React", "Next.js"],
-    featured: true,
     imageSrc: "/paperlm/paperlm.png",
     imageAlt: "PaperLM research assistant interface",
     gallery: ["/paperlm/paperlm.png"],
@@ -212,6 +274,49 @@ export const portfolioProjects: ProjectType[] = [
 
 export const littleProjects: ProjectType[] = [
   {
+    name: "Plane Detection",
+    subtitle:
+      "Mapping nearby aircraft with a Raspberry Pi and an ADS-B receiver",
+    description:
+      "A 1090 MHz receiver picks up aircraft signals around Paris and displays their positions on a map.",
+    date: "",
+    stack: ["Raspberry Pi", "ADS-B", "1090 MHz receiver"],
+    categories: ["Hardware"],
+    long_description: [
+      "Plane Detection combines a Raspberry Pi and a 1090 MHz ADS-B receiver to detect aircraft in the Paris region. The received positions are displayed on a map, making nearby air traffic visible through a small radio setup.",
+    ],
+    imageAlt: "Plane Detection receiver and aircraft map",
+    gallery: [
+      "/plane-detection/aircraft-map.jpg",
+      "/plane-detection/receiver-setup.jpg",
+    ],
+  },
+  {
+    name: "Video Effect",
+    subtitle: "Manipulating a video signal with a custom electronic circuit",
+    description:
+      "An electronics experiment that alters a video signal between its source and display.",
+    date: "",
+    stack: ["Raspberry Pi", "Custom electronic circuit"],
+    categories: ["Hardware"],
+    long_description: [
+      "Video Effect explores the image as an electrical signal. A Raspberry Pi and a custom electronic circuit physically manipulate the video signal between source and display, producing visible changes on screen.",
+      "The circuit layout and the resulting screen images document both sides of the experiment: the electronics that intervene in the signal and the visual effects they produce.",
+    ],
+    imageAlt: "Video Effect circuit and altered video signal",
+    videos: [
+      {
+        src: "/video-effect/video-effect-signal.mp4",
+        title: "Video signal experiment",
+        poster: "/video-effect/screen-effect.jpg",
+      },
+    ],
+    gallery: [
+      "/video-effect/screen-effect.jpg",
+      "/video-effect/circuit-board.jpg",
+    ],
+  },
+  {
     name: "MNISTify",
     subtitle: "Real-time handwritten digit recognition, powered by WebGPU",
     description:
@@ -233,18 +338,29 @@ export const littleProjects: ProjectType[] = [
   {
     name: "CreaTruck",
     subtitle:
-      "A remote-controlled car built from the chassis to the electronics",
+      "A functioning remote-controlled car made through rapid fabrication",
     description:
-      "A complete hardware project: chassis, motor control, radio link and recording.",
-    date: "Feb 2026",
-    role: "Solo build — hardware",
+      "A hardware prototype built from fabricated parts through to an assembled, functioning remote-controlled car.",
+    date: "2026",
+    role: "Hardware — rapid fabrication",
     categories: ["Hardware"],
     long_description: [
-      "CreaTruck is a remote-controlled car built end to end rather than assembled from a kit: the chassis, the motor control, the radio link between the handset and the board, and the onboard recording of every run.",
-      "It came out of wanting to follow the truck while it drives instead of chasing it with the controller. The documentation of the build lives in a public Notion page, and it is the project where the constraints are physical — soldering, interference, and a battery that has to last the length of a track.",
+      "CreaTruck is a rapid-fabrication project centred on building a functioning remote-controlled car. The build follows the transition from individual fabricated parts to an assembled vehicle, bringing physical prototyping and assembly together.",
     ],
     live: "https://hma-creatruck-recorder.notion.site/MDF-CreaTruck-294ba826d55e801e8914ed33b52a0e70",
-    imageAlt: "Photography of the CreaTruck",
+    imageAlt: "CreaTruck remote-controlled car prototype",
+    videos: [
+      {
+        src: "/creatruck/creatruck-prototype.mp4",
+        title: "CreaTruck prototype in motion",
+        poster: "/creatruck/prototype.jpg",
+      },
+    ],
+    gallery: [
+      "/creatruck/prototype.jpg",
+      "/creatruck/assembly.jpg",
+      "/creatruck/electronics.jpg",
+    ],
   },
   {
     name: "CreaDart",
@@ -302,6 +418,7 @@ export const littleProjects: ProjectType[] = [
 
 export const allProjects: ProjectType[] = [
   ...selectedProjects,
+  ...projects,
   ...portfolioProjects,
   ...littleProjects,
 ]

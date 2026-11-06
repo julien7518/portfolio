@@ -11,11 +11,13 @@ type Drag = { startX: number; startLeft: number; moved: boolean } | null
 export function Gallery({
   images,
   alts,
+  videos = [],
   name,
   className,
 }: {
   images: string[]
   alts?: (string | undefined)[]
+  videos?: { src: string; title: string; poster?: string }[]
   name: string
   className?: string
 }) {
@@ -23,7 +25,16 @@ export function Gallery({
   const dragRef = useRef<Drag>(null)
 
   const [active, setActive] = useState(0)
-  const count = images.length
+  const media = [
+    ...images.map((src, index) => ({
+      src,
+      title: alts?.[index] ?? `${name} — screen ${index + 1}`,
+      type: "image" as const,
+      poster: undefined,
+    })),
+    ...videos.map((video) => ({ ...video, type: "video" as const })),
+  ]
+  const count = media.length
   const single = count < 2
 
   useEffect(() => {
@@ -44,6 +55,15 @@ export function Gallery({
 
     return () => track.removeEventListener("scroll", onScroll)
   }, [count])
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    Array.from(track.children).forEach((item, index) => {
+      if (index !== active) item.querySelector("video")?.pause()
+    })
+  }, [active])
 
   const goTo = useCallback((index: number) => {
     const track = trackRef.current
@@ -72,6 +92,7 @@ export function Gallery({
   )
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if ((event.target as HTMLElement).closest("video")) return
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return
     event.preventDefault()
 
@@ -79,6 +100,7 @@ export function Gallery({
   }
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if ((event.target as HTMLElement).closest("video")) return
     if (event.pointerType === "mouse" && event.button !== 0) return
 
     const track = trackRef.current
@@ -155,9 +177,9 @@ export function Gallery({
           single && "justify-center"
         )}
       >
-        {images.map((src, index) => (
+        {media.map((item, index) => (
           <figure
-            key={src}
+            key={item.src}
             className={cn(
               "w-[82%] shrink-0 snap-center sm:w-[68%] md:w-140 lg:w-160",
               single && "w-full max-w-160"
@@ -171,21 +193,35 @@ export function Gallery({
                   "outline outline-offset-4 outline-primary"
               )}
             >
-              <Image
-                src={src}
-                alt={alts?.[index] ?? `${name} — screen ${index + 1}`}
-                fill
-                sizes="(max-width: 768px) 82vw, 640px"
-                draggable={false}
-                className="object-cover"
-              />
+              {item.type === "video" ? (
+                <video
+                  controls
+                  playsInline
+                  preload="none"
+                  poster={item.poster}
+                  aria-label={item.title}
+                  className="h-full w-full object-contain"
+                >
+                  <source src={item.src} type="video/mp4" />
+                  <a href={item.src}>Watch {item.title.toLowerCase()}</a>
+                </video>
+              ) : (
+                <Image
+                  src={item.src}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 768px) 82vw, 640px"
+                  draggable={false}
+                  className="object-cover"
+                />
+              )}
             </div>
 
             <figcaption className="mt-3 flex items-baseline gap-3 font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase">
               <span className="text-primary tabular-nums">
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="truncate">{alts?.[index] ?? name}</span>
+              <span className="truncate">{item.title}</span>
             </figcaption>
           </figure>
         ))}
@@ -193,10 +229,10 @@ export function Gallery({
 
       {!single ? (
         <div className="flex items-center justify-between gap-6 border-t border-border pt-4">
-          <div className="flex items-center gap-2">
-            {images.map((src, index) => (
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            {media.map((item, index) => (
               <button
-                key={src}
+                key={item.src}
                 type="button"
                 data-cursor-pointer
                 onClick={() => goTo(index)}
