@@ -274,68 +274,6 @@ export const portfolioProjects: ProjectType[] = [
 
 export const littleProjects: ProjectType[] = [
   {
-    name: "Plane Detection",
-    subtitle:
-      "Mapping nearby aircraft with a Raspberry Pi and an ADS-B receiver",
-    description:
-      "A 1090 MHz receiver picks up aircraft signals around Paris and displays their positions on a map.",
-    date: "",
-    stack: ["Raspberry Pi", "ADS-B", "1090 MHz receiver"],
-    categories: ["Hardware"],
-    long_description: [
-      "Plane Detection combines a Raspberry Pi and a 1090 MHz ADS-B receiver to detect aircraft in the Paris region. The received positions are displayed on a map, making nearby air traffic visible through a small radio setup.",
-    ],
-    imageAlt: "Plane Detection receiver and aircraft map",
-    gallery: [
-      "/plane-detection/aircraft-map.jpg",
-      "/plane-detection/receiver-setup.jpg",
-    ],
-  },
-  {
-    name: "Video Effect",
-    subtitle: "Manipulating a video signal with a custom electronic circuit",
-    description:
-      "An electronics experiment that alters a video signal between its source and display.",
-    date: "",
-    stack: ["Raspberry Pi", "Custom electronic circuit"],
-    categories: ["Hardware"],
-    long_description: [
-      "Video Effect explores the image as an electrical signal. A Raspberry Pi and a custom electronic circuit physically manipulate the video signal between source and display, producing visible changes on screen.",
-      "The circuit layout and the resulting screen images document both sides of the experiment: the electronics that intervene in the signal and the visual effects they produce.",
-    ],
-    imageAlt: "Video Effect circuit and altered video signal",
-    videos: [
-      {
-        src: "/video-effect/video-effect-signal.mp4",
-        title: "Video signal experiment",
-        poster: "/video-effect/screen-effect.jpg",
-      },
-    ],
-    gallery: [
-      "/video-effect/screen-effect.jpg",
-      "/video-effect/circuit-board.jpg",
-    ],
-  },
-  {
-    name: "MNISTify",
-    subtitle: "Real-time handwritten digit recognition, powered by WebGPU",
-    description:
-      "Draw a digit and see it classified live, with inference running on the GPU.",
-    date: "Nov 2025",
-    role: "Solo build — machine learning & WebGPU",
-    stack: ["Next.js", "TinyGrad", "WebGPU"],
-    long_description: [
-      "MNISTify makes digit recognition something you can play with instead of read about. You draw a number on a canvas and the prediction updates as you draw, with a live chart of what the network is actually outputting so you can watch the confidence move rather than just read a label.",
-      "Two architectures are available and can be compared side by side: a multilayer perceptron, which is fast and light, and a convolutional network, which is more accurate. You can inspect the model's input and compare inference time between them. Training runs on the MNIST dataset through TinyGrad; inference then runs in the browser on WebGPU, so the whole thing costs nothing to host and stays responsive while you draw.",
-    ],
-    github: "https://github.com/julien7518/mnistify",
-    live: "https://mnistify.vercel.app",
-    categories: ["AI", "React", "Next.js", "WebGPU"],
-    imageSrc: "/mnistify/mnistify.png",
-    imageAlt: "MNISTify predicting a handwritten digit",
-    gallery: ["/mnistify/mnistify.png"],
-  },
-  {
     name: "CreaTruck",
     subtitle:
       "A functioning remote-controlled car made through rapid fabrication",
@@ -363,6 +301,50 @@ export const littleProjects: ProjectType[] = [
     ],
   },
   {
+    name: "MNISTify",
+    subtitle: "Real-time handwritten digit recognition, powered by WebGPU",
+    description:
+      "Draw a digit and see it classified live, with inference running on the GPU.",
+    date: "Nov 2025",
+    role: "Solo build — machine learning & WebGPU",
+    stack: ["Next.js", "TinyGrad", "WebGPU"],
+    long_description: [
+      "MNISTify makes digit recognition something you can play with instead of read about. You draw a number on a canvas and the prediction updates as you draw, with a live chart of what the network is actually outputting so you can watch the confidence move rather than just read a label.",
+      "Two architectures are available and can be compared side by side: a multilayer perceptron, which is fast and light, and a convolutional network, which is more accurate. You can inspect the model's input and compare inference time between them. Training runs on the MNIST dataset through TinyGrad; inference then runs in the browser on WebGPU, so the whole thing costs nothing to host and stays responsive while you draw.",
+    ],
+    github: "https://github.com/julien7518/mnistify",
+    live: "https://mnistify.vercel.app",
+    categories: ["AI", "React", "Next.js", "WebGPU"],
+    imageSrc: "/mnistify/mnistify.png",
+    imageAlt: "MNISTify predicting a handwritten digit",
+    gallery: ["/mnistify/mnistify.png"],
+  },
+  {
+    name: "Video Effect",
+    subtitle: "Manipulating a video signal with a custom electronic circuit",
+    description:
+      "An electronics experiment that alters a video signal between its source and display.",
+    date: "",
+    stack: ["Raspberry Pi", "Custom electronic circuit"],
+    categories: ["Hardware"],
+    long_description: [
+      "Video Effect explores the image as an electrical signal. A Raspberry Pi and a custom electronic circuit physically manipulate the video signal between source and display, producing visible changes on screen.",
+      "The circuit layout and the resulting screen images document both sides of the experiment: the electronics that intervene in the signal and the visual effects they produce.",
+    ],
+    imageAlt: "Video Effect circuit and altered video signal",
+    videos: [
+      {
+        src: "/video-effect/video-effect-signal.mp4",
+        title: "Video signal experiment",
+        poster: "/video-effect/screen-effect.jpg",
+      },
+    ],
+    gallery: [
+      "/video-effect/screen-effect.jpg",
+      "/video-effect/circuit-board.jpg",
+    ],
+  },
+  {
     name: "CreaDart",
     subtitle:
       "A straightforward web application coded in a single day to track our class’s dart tournament",
@@ -379,6 +361,24 @@ export const littleProjects: ProjectType[] = [
     live: "https://creadart.vercel.app",
     categories: ["React", "Next.js"],
     imageAlt: "Home page of CreaDart",
+  },
+  {
+    name: "Plane Detection",
+    subtitle:
+      "Mapping nearby aircraft with a Raspberry Pi and an ADS-B receiver",
+    description:
+      "A 1090 MHz receiver picks up aircraft signals around Paris and displays their positions on a map.",
+    date: "",
+    stack: ["Raspberry Pi", "ADS-B", "1090 MHz receiver"],
+    categories: ["Hardware"],
+    long_description: [
+      "Plane Detection combines a Raspberry Pi and a 1090 MHz ADS-B receiver to detect aircraft in the Paris region. The received positions are displayed on a map, making nearby air traffic visible through a small radio setup.",
+    ],
+    imageAlt: "Plane Detection receiver and aircraft map",
+    gallery: [
+      "/plane-detection/aircraft-map.jpg",
+      "/plane-detection/receiver-setup.jpg",
+    ],
   },
   {
     name: "Tempestra",
