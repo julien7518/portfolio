@@ -1,5 +1,5 @@
 # Julien Fernandes — Portfolio
 
-Hello. My name is Julien. This is my portfolio.
+Hey 👋 come check out my portfolio
 
 [Visit the portfolio](https://julien-fernandes.vercel.app)
