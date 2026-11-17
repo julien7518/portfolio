@@ -12,6 +12,7 @@ import {
 } from "react"
 import Image from "next/image"
 
+import { publicPath } from "@/lib/base-path"
 import { gsap } from "@/lib/gsap"
 
 export type PreviewTarget = {
@@ -163,7 +164,7 @@ export function ProjectPreviewProvider({ children }: { children: ReactNode }) {
             <div className="absolute inset-0 scale-[1.08]">
               <Image
                 key={target.frames[index]}
-                src={target.frames[index]}
+                src={publicPath(target.frames[index])}
                 alt=""
                 fill
                 sizes="380px"

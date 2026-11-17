@@ -9,6 +9,7 @@ import { Cursor } from "@/components/cursor"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { identity, seo } from "@/resources"
+import { siteBaseUrl } from "@/lib/base-path"
 import { createPageMetadata } from "@/lib/metadata"
 
 const geist = Geist({
@@ -31,7 +32,7 @@ const instrumentSerifHeading = Instrument_Serif({
 
 export const metadata: Metadata = {
   ...createPageMetadata({ description: seo.description, path: "/" }),
-  metadataBase: new URL(seo.url),
+  metadataBase: siteBaseUrl(seo.url),
   title: {
     default: seo.title,
     template: `%s | ${identity.name}`,

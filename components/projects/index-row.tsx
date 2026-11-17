@@ -6,6 +6,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { ArrowUpRight, MoveRight } from "lucide-react"
 
+import { publicPath } from "@/lib/base-path"
 import { GitHub } from "@/components/logos"
 import { usePreview, type PreviewTarget } from "./preview"
 
@@ -122,7 +123,7 @@ export function IndexRow({
         {project.frames[0] ? (
           <div className="pointer-events-none relative aspect-5/3 w-36 overflow-hidden bg-muted">
             <Image
-              src={project.frames[0]}
+              src={publicPath(project.frames[0])}
               alt={project.imageAlt ?? ""}
               fill
               sizes="144px"

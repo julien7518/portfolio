@@ -1,4 +1,6 @@
 import Image from "next/image"
+
+import { publicPath } from "@/lib/base-path"
 import styles from "./about.module.css"
 
 export function PortraitSection() {
@@ -16,7 +18,7 @@ export function PortraitSection() {
         <figure className={styles.portrait}>
           <div className={styles.photo}>
             <Image
-              src="/me/portrait.webp"
+              src={publicPath("/me/portrait.webp")}
               width={2720}
               height={3296}
               alt="Julien Fernandes outdoors, looking directly at the camera."

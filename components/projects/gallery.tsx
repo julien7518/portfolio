@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
+import { publicPath } from "@/lib/base-path"
 import { cn } from "@/lib/utils"
 
 type Drag = { startX: number; startLeft: number; moved: boolean } | null
@@ -198,16 +199,18 @@ export function Gallery({
                   controls
                   playsInline
                   preload="none"
-                  poster={item.poster}
+                  poster={item.poster ? publicPath(item.poster) : undefined}
                   aria-label={item.title}
                   className="h-full w-full object-contain"
                 >
-                  <source src={item.src} type="video/mp4" />
-                  <a href={item.src}>Watch {item.title.toLowerCase()}</a>
+                  <source src={publicPath(item.src)} type="video/mp4" />
+                  <a href={publicPath(item.src)}>
+                    Watch {item.title.toLowerCase()}
+                  </a>
                 </video>
               ) : (
                 <Image
-                  src={item.src}
+                  src={publicPath(item.src)}
                   alt={item.title}
                   fill
                   sizes="(max-width: 768px) 82vw, 640px"
