@@ -130,6 +130,14 @@
   }
   html {
     @apply overflow-x-hidden font-sans;
+    /*
+     * Tailwind's spacing and type scale are rem-based. Keep the familiar 16px
+     * foundation through laptop widths, then let the whole interface grow
+     * progressively on wide and ultra-wide displays (up to 48px at ~5867px).
+     * Viewport-sized display type remains intentionally governed by its own vw
+     * values, so the hero retains its composition.
+     */
+    font-size: clamp(1rem, calc(0.25rem + 0.75vw), 3rem);
   }
 }
 
