@@ -37,11 +37,13 @@ export const location = {
 
 export const contact = {
   email: "julien.f2004@icloud.com",
+  phone: "+33 7 83 98 47 40",
   /** The eyebrow above the contact heading. */
   availability: "Available for an internship or a project",
   /** Builds a mailto: href. Use this instead of writing the scheme inline. */
   mailto: (subject?: string) =>
     `mailto:${contact.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ""}`,
+  phoneHref: "tel:+33783984740",
 } as const
 
 export type SocialId = "github" | "linkedin" | "instagram" | "x"

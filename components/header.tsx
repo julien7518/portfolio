@@ -14,6 +14,22 @@ export function Header() {
 
   const detail = pathname?.match(/^\/projects\/([^/]+)\/?$/)
   const projectsHref = detail ? `/projects#project-${detail[1]}` : "/projects"
+  const isHomePage = pathname === "/"
+
+  function scrollToContact() {
+    const contactSection = document.getElementById("contact")
+
+    if (!contactSection) return
+
+    // The approach section takes control of regular scrolling. Let it know
+    // this deliberate navigation should bypass its choreography.
+    window.dispatchEvent(new Event("portfolio:skip-approach"))
+
+    contactSection.scrollIntoView({
+      behavior: "instant",
+      block: "start",
+    })
+  }
 
   return (
     <div className="flex justify-between p-4 md:p-6">
@@ -40,9 +56,15 @@ export function Header() {
         <Button asChild variant="secondary" className="px-4">
           <Link href="/resume">CV</Link>
         </Button>
-        <Button asChild>
-          <Link href={contact.mailto()}>Contact</Link>
-        </Button>
+        {isHomePage ? (
+          <Button type="button" onClick={scrollToContact}>
+            Contact
+          </Button>
+        ) : (
+          <Button asChild>
+            <Link href={contact.mailto()}>Mail</Link>
+          </Button>
+        )}
       </div>
     </div>
   )

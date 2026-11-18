@@ -759,6 +759,11 @@ export function Manifesto() {
         let touchY = 0
         let playback: gsap.core.Tween | undefined
         let hold: gsap.core.Tween | undefined
+        const skip = () => {
+          playback?.kill()
+          hold?.kill()
+          phase = "done"
+        }
         const cancel = () => {
           playback?.kill()
           hold?.kill()
@@ -891,6 +896,7 @@ export function Manifesto() {
             )
           },
         })
+        window.addEventListener("portfolio:skip-approach", skip)
         window.addEventListener("wheel", wheel, { passive: false })
         window.addEventListener("touchstart", touchStart, { passive: true })
         window.addEventListener("touchmove", touchMove, { passive: false })
@@ -904,6 +910,7 @@ export function Manifesto() {
           disposed = true
           playback?.kill()
           hold?.kill()
+          window.removeEventListener("portfolio:skip-approach", skip)
           window.removeEventListener("wheel", wheel)
           window.removeEventListener("touchstart", touchStart)
           window.removeEventListener("touchmove", touchMove)

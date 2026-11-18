@@ -78,7 +78,8 @@ export function Hero() {
           >
             Across <span className="specific-word">web</span>, native, embedded
             and <span className="specific-word">AI</span>, I turn complex
-            systems into <span className="specific-word">experiences</span> that
+            systems into{" "}
+            <span className="specific-word">immersive experiences</span> that
             feel clear, tactile and alive.
           </p>
         </div>

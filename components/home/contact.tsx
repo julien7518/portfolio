@@ -1,11 +1,11 @@
-import { ArrowUpRight } from "lucide-react"
+import { ArrowUpRight, MapPin, Phone } from "lucide-react"
 
 import { Reveal } from "@/components/ui/reveal"
 import { contact, location } from "@/resources"
 
 export function Contact() {
   return (
-    <section className="px-6 pb-24 md:pb-32">
+    <section id="contact" className="scroll-mt-6 px-6 pb-18 md:pb-26">
       <Reveal y={26}>
         <div className="border-t border-border pt-8 md:pt-12">
           <p className="font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase">
@@ -19,7 +19,7 @@ export function Contact() {
             <span className="text-primary">.</span>
           </h2>
 
-          <div className="mt-10 flex flex-col gap-4 border-t border-border pt-6 md:flex-row md:items-baseline md:justify-between">
+          <div className="mt-10 flex flex-col gap-6 border-t border-border pt-6 md:flex-row md:items-end md:justify-between">
             <a
               href={contact.mailto()}
               data-cursor-pointer
@@ -32,9 +32,20 @@ export function Contact() {
               />
             </a>
 
-            <p className="font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase">
-              {location.note}
-            </p>
+            <div className="flex flex-col gap-3 font-mono text-[0.625rem] tracking-widest text-muted-foreground uppercase md:items-end">
+              <a
+                href={contact.phoneHref}
+                data-cursor-pointer
+                className="inline-flex items-center gap-2 text-foreground transition-colors hover:text-muted-foreground"
+              >
+                <Phone aria-hidden className="size-3" />
+                {contact.phone}
+              </a>
+              <p className="inline-flex items-center gap-2">
+                <MapPin aria-hidden className="size-3" />
+                {location.note}
+              </p>
+            </div>
           </div>
         </div>
       </Reveal>
